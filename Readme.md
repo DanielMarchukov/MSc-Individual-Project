@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------------------------------------
 # Disclaimer
 This is an unofficial LaTeX template for KCL MSc Projects for the Informatics Department. 
 
