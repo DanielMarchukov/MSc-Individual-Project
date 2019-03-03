@@ -1,3 +1,4 @@
+
 --------------------------------------------------------------------------------------------
 
 # Disclaimer
@@ -8,5 +9,3 @@ How ever it has been approved by the supervisor for the MSc Projects for 2015/16
 It is derived from the Imperial College London Thesis template (which can be found [here](https://www.imperial.ac.uk/media/imperial-college/faculty-of-natural-sciences/department-of-mathematics/public/study/admissions/pg/msc/math-fin/MScThesisTemplate.zip)).
 
 The front page and the bibliography style of King's Harvard V1 have been adapted from the official resources of KCL which were ported to LaTex by [Andre Müller](https://github.com/mueller-andre) (andre.mueller@kcl.ac.uk). Many thanks!
-
-I do not give any guarantee on this template that it fullfils the KCL regulations or any other regulations.
