@@ -4,9 +4,12 @@
 \documentclass[kclharvardbib]{kclthesis}  % notes see below
 
 % nomenclature 
-%\usepackage[intoc]{nomencl}
+\usepackage[intoc]{nomencl}
 % glossaries
 \usepackage[toc, acronym]{glossaries} 
+
+\usepackage{natbib}
+\usepackage[UKenglish]{isodate}
 
 % customize your general setup here
 \title{Argument Mining on Social Media}
@@ -17,10 +20,10 @@
 \studentnumber{1844311}
 \programme{MSc Web Intelligence}
 \supervisor{Josh Murphy}
-\wordcount{856}
+\wordcount{325}
 
 %\makenomenclature
-\makeglossaries
+%\makeglossaries
 
 \begin{document}
 \pagenumbering{gobble}
@@ -50,6 +53,8 @@
 \pagestyle{fancy} 
 %\fancyhead{\sffamily\small \thepage}
 %\fancyhead{\sffamily\small \nouppercase{\rightmark}}
+
+% Probably uncomment this along with others:
 \fancyhead[RO,LE]{\sffamily\small \thepage}
 \fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
 \renewcommand{\headrulewidth}{0.4pt}
@@ -59,11 +64,11 @@
 %%%%%% Main content
 \pagenumbering{arabic}
 \include{contents/introduction}
-\include{contents/background}
-\include{contents/main}
-\include{contents/conclusion}
+%\include{contents/background}
+%\include{contents/main}
+%\include{contents/conclusion}
+%\include{contents/nomenclature}
 
-\include{contents/nomenclature}
 %%%%% References
 %\bibliographystyle{ieeetr}
 %%%%% Use King's College Harvard V1 style
@@ -74,12 +79,12 @@
 % 3. Uncomment the line "\bibliographystyle{kclharvardv1}" below.
 %%%%%
 \bibliographystyle{kclharvardv1}
+\bibliography{bibs/sample1}
 
-\bibliography{bibs/sample1, bibs/sample2} 
 %%%%% Declaration
-\include{structure/declaration}
+%\include{structure/declaration}
 %%%%% Appendix 
-\appendix
-\include{appendix/app_1}
+%\appendix
+%\include{appendix/app_1}
 
 \end{document}
