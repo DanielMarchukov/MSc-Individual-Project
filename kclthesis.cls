@@ -1,29 +1,18 @@
-\ProvidesClass{kclthesis}[2016/02/13 KCL MSc Thesis Class by Sebastian Zillessen and Andre Mueller]
+\ProvidesClass{kclthesis}[KCL MSc Thesis Class]
 \NeedsTeXFormat{LaTeX2e}
 
-\newif\ifkclthesis@isdraft
 \newif\ifkclthesis@kclharvardbib
 
-
-\DeclareOption{isdraft}{\kclthesis@isdrafttrue}
 \DeclareOption{kclharvardbib}{\kclthesis@kclharvardbibtrue}
-
 
 \ProcessOptions*% process options it the order the user provides them
 
 \LoadClass[11pt,a4paper]{article}
 
-\ifkclthesis@isdraft
-	\RequirePackage{draftwatermark}
-	\SetWatermarkText{DRAFT}
-	\SetWatermarkScale{8}
-\fi
-
 \ifkclthesis@kclharvardbib
 	\RequirePackage{natbib}
 	\RequirePackage[UKenglish]{isodate}
 \fi
-
 
 % Mathfonts
 \RequirePackage{amsmath, amsfonts, amsthm, amssymb}
@@ -31,20 +20,17 @@
 
 %Additional Packages
 \RequirePackage{color}
-\RequirePackage[nottoc,notlot,notlof]{tocbibind}
+\RequirePackage[nottoc, notlot, notlof]{tocbibind}
 \RequirePackage{hyperref}
 \RequirePackage{fancyhdr}
 \RequirePackage{subfigure}
-\RequirePackage[textsize=tiny,figwidth=8cm]{todonotes}
+\RequirePackage[textsize = tiny, figwidth = 8cm]{todonotes}
 
 % Cover Page
 \RequirePackage{graphicx}
 \RequirePackage[paper=a4paper]{geometry}
 \RequirePackage{setspace}
 \RequirePackage{framed}
-
-
-
 
 %%%% VARIABLES
 \newcommand*{\modulecode}[1]{\gdef\@modulecode{#1}}
@@ -82,7 +68,8 @@
 \newtheorem{assumption}[theorem]{Assumption}
 \newtheorem{conjecture}[theorem]{Conjecture}
 
-\newcommand{\ind}{1\hspace{-2.1mm}{1}} %Indicator Function
+%Indicator Function
+\newcommand{\ind}{1\hspace{-2.1mm}{1}}
 \newcommand{\I}{\mathtt{i}}
 \newcommand{\D}{\mathrm{d}}
 \newcommand{\E}{\mathrm{e}}
@@ -94,12 +81,10 @@
 \def\blue#1{\textcolor{blue}{#1}}
 \def\red#1{\textcolor{red}{#1}}
 
-
 % New Comment for todonotes
 \newcommand{\insertref}[1]{\todo[color=green!40]{RefMissing: #1}}
 \newcommand{\explainindetail}[1]{\todo[color=red!40]{Explain: #1}}
 \newcommand{\askfeedback}[1]{\todo[color=blue!40]{Feedback Required: #1}}
-
 
 \renewcommand*{\maketitle}{
 \begin{titlepage}
@@ -116,7 +101,7 @@
 \end{minipage}%
 \begin{minipage}{0.25\textwidth}
 	\begin{flushright}
-		\includegraphics[width=3.25cm]{img/kcl}
+		\includegraphics[width = 3.25cm]{img/kcl}
 	\end{flushright}
 \end{minipage}
 \vspace{1cm}
@@ -168,63 +153,6 @@ I acknowledge that I have read and understood the above information and that the
 	\end{flushleft}
 \end{minipage}
 
-\end{titlepage}
-}
-\newcommand*{\maketitleTwo}{
-
-% Second Cover Page
-
-\begin{titlepage}
-\thispagestyle{empty}
-\null\vskip0.2in%
-
-\begin{center}
-\@department \\ 
-King's College London \\
-WC2R 2LS London \\ 
-United Kingdom
-\end{center}
-
-
-\vspace{1.5cm}
-
-\begin{center}
-\LARGE{{\bf 
-\@title
-}}\\
-\vspace{0.2cm}
-\vskip\bigskipamount % or other desired dimension
-\leaders\vrule width \textwidth\vskip0.4pt % or other desired thickness
-\vskip\bigskipamount % ditto
-\nointerlineskip
-\end{center}
-
-\vspace{0.2cm}
-
-\begin{center}
-{\bf \@author}\\
-Student Number: \@studentnumber\\
-Course: \@programme
-\end{center}
-
-\vspace{1.2cm}
-\begin{center}
-\bf{Supervisor:} \@supervisor
-\end{center}
-
-\vspace{1cm}
-
-\begin{figure}[!h]
-\centering
-\includegraphics[width=3.5cm]{img/kcl}
-\end{figure}
-
-\vspace{1.2cm}
-
-\begin{center}
-Thesis submitted as part of the requirements for the award of the MSc in Web Intelligence.\\
-7CCSMPRJ - MSc Individual Project - 2019
-\end{center}
 \end{titlepage}
 }
 
