@@ -1,6 +1,3 @@
-%&latexf
- % [isdraft] provides background water mark "DRAFT"
- % [kclharvardbib] provides different reference style.
 \documentclass[kclharvardbib]{kclthesis}  % notes see below
 
 % nomenclature 
@@ -17,7 +14,7 @@
 \studentnumber{1844311}
 \programme{MSc Web Intelligence}
 \supervisor{Josh Murphy}
-\wordcount{321}
+\wordcount{715}
 
 \makenomenclature
 \makeglossaries
@@ -25,64 +22,57 @@
 \begin{document}
 \pagenumbering{gobble}
 
-%%%%%% depends what you like, might try out the other frontpage as well
 \maketitle 		% official styled layout
-%\maketitleTwo 	% adapted layout which looks nicer from my point of view.
+%\maketitleTwo 	% adapted layout
 
 %%%%%% empty page after main page.
 \newpage
 \thispagestyle{empty}
 \mbox{}
 \newpage
-%%%%%% Abstract
-%\include{contents/abstract}
-%%%%%% Table of contents
 
+%%%%%% Abstract
+\include{contents/abstract}
+
+%%%%%% Table of contents
 \pagenumbering{roman}
 \setcounter{tocdepth}{4}
 \tableofcontents
 \newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\include{structure/figures_tables}
-%\include{structure/acknowledgements}
+\include{structure/acknowledgements}
 \fancyhead{}
 \fancyfoot{}
 \pagestyle{fancy} 
-%\fancyhead{\sffamily\small \thepage}
-%\fancyhead{\sffamily\small \nouppercase{\rightmark}}
+\fancyhead[R,L]{\sffamily\small \thepage}
+\fancyhead[LO]{\sffamily\small \nouppercase{\rightmark}}
 
-% Probably uncomment this along with others:
-\fancyhead[RO,L]{\sffamily\small \thepage}
-\fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
+%\fancyhead[RO,L]{\sffamily\small \thepage}
+%\fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.0pt}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Main content
 \pagenumbering{arabic}
 \include{contents/introduction}
-%\include{contents/background}
-%\include{contents/main}
+\include{contents/background}
+\include{contents/main}
 %\include{contents/conclusion}
-%\include{contents/nomenclature}
+\include{contents/nomenclature}
 
 %%%%% References
 %\bibliographystyle{ieeetr}
-%%%%% Use King's College Harvard V1 style
-% If you want to use a bibliography style that is quite close to 
-% the King's College Harvard V1 style (http://libguides.kcl.ac.uk/reference/KingsHarvardV1): 
-% 1. Remove or comment the line "\bibliography{ieeetr}" above.
-% 2. Provide "kclharvardbib" as a document class parameter in the beginning of this file.
-% 3. Uncomment the line "\bibliographystyle{kclharvardv1}" below.
-%%%%%
-
 \bibliographystyle{kclharvardv1}
 \bibliography{bibs/sample1}
 
 %%%%% Declaration
-%\include{structure/declaration}
+\include{structure/declaration}
+
 %%%%% Appendix 
-%\appendix
-%\include{appendix/app_1}
+\appendix
+\include{appendix/app_1}
 
 \end{document}
