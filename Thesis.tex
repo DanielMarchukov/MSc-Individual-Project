@@ -6,10 +6,7 @@
 % nomenclature 
 \usepackage[intoc]{nomencl}
 % glossaries
-\usepackage[toc, acronym]{glossaries} 
-
-\usepackage{natbib}
-\usepackage[UKenglish]{isodate}
+\usepackage[toc, acronym]{glossaries}
 
 % customize your general setup here
 \title{Argument Mining on Social Media}
@@ -20,10 +17,10 @@
 \studentnumber{1844311}
 \programme{MSc Web Intelligence}
 \supervisor{Josh Murphy}
-\wordcount{325}
+\wordcount{321}
 
-%\makenomenclature
-%\makeglossaries
+\makenomenclature
+\makeglossaries
 
 \begin{document}
 \pagenumbering{gobble}
@@ -38,7 +35,7 @@
 \mbox{}
 \newpage
 %%%%%% Abstract
-\include{contents/abstract}
+%\include{contents/abstract}
 %%%%%% Table of contents
 
 \pagenumbering{roman}
@@ -46,8 +43,8 @@
 \tableofcontents
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{structure/figures_tables}
-\include{structure/acknowledgements}
+%\include{structure/figures_tables}
+%\include{structure/acknowledgements}
 \fancyhead{}
 \fancyfoot{}
 \pagestyle{fancy} 
@@ -55,7 +52,7 @@
 %\fancyhead{\sffamily\small \nouppercase{\rightmark}}
 
 % Probably uncomment this along with others:
-\fancyhead[RO,LE]{\sffamily\small \thepage}
+\fancyhead[RO,L]{\sffamily\small \thepage}
 \fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.0pt}
@@ -78,6 +75,7 @@
 % 2. Provide "kclharvardbib" as a document class parameter in the beginning of this file.
 % 3. Uncomment the line "\bibliographystyle{kclharvardv1}" below.
 %%%%%
+
 \bibliographystyle{kclharvardv1}
 \bibliography{bibs/sample1}
 
