@@ -1,11 +1,8 @@
-\documentclass[kclharvardbib]{kclthesis}  % notes see below
+\documentclass[kclieee]{kclthesis}
 
-% nomenclature 
 \usepackage[intoc]{nomencl}
-% glossaries
 \usepackage[toc, acronym]{glossaries}
 
-% customize your general setup here
 \title{Argument Mining on Social Media}
 \author{Danielius Marciukovas}
 \modulecode{7CCSMPRJ}
@@ -22,7 +19,6 @@
 \begin{document}
 \pagenumbering{gobble}
 
-% official title layout
 \maketitle
 
 %%%%%% empty page after main page.
@@ -65,8 +61,8 @@
 \include{contents/nomenclature}
 
 %%%%% References
-%\bibliographystyle{ieeetr}
-\bibliographystyle{kclharvardv1}
+% For KCL Harvard V1: \bibliographystyle{kclharvardv1}
+\bibliographystyle{ieeetr}
 \bibliography{bibs/bibliography}
 
 %%%%% Declaration

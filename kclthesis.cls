@@ -2,16 +2,21 @@
 \NeedsTeXFormat{LaTeX2e}
 
 \newif\ifkclthesis@kclharvardbib
+\newif\ifkclthesis@kclieee
 
 \DeclareOption{kclharvardbib}{\kclthesis@kclharvardbibtrue}
+\DeclareOption{kclieee}{\kclthesis@kclieeetrue}
 
-\ProcessOptions*% process options it the order the user provides them
+\ProcessOptions*
 
 \LoadClass[11pt,a4paper]{article}
 
 \ifkclthesis@kclharvardbib
 	\RequirePackage{natbib}
-	\RequirePackage[UKenglish]{isodate}
+\fi
+
+\ifkclthesis@kclieee
+	\RequirePackage[numbers]{natbib}
 \fi
 
 % Math fonts
@@ -19,6 +24,7 @@
 \RequirePackage{wasysym}
 
 % Additional Packages
+\RequirePackage[UKenglish]{isodate}
 \RequirePackage{color}
 \RequirePackage[nottoc, notlot, notlof]{tocbibind}
 \RequirePackage{hyperref}
