@@ -14,11 +14,11 @@
 	\RequirePackage[UKenglish]{isodate}
 \fi
 
-% Mathfonts
+% Math fonts
 \RequirePackage{amsmath, amsfonts, amsthm, amssymb}
 \RequirePackage{wasysym}
 
-%Additional Packages
+% Additional Packages
 \RequirePackage{color}
 \RequirePackage[nottoc, notlot, notlof]{tocbibind}
 \RequirePackage{hyperref}
@@ -68,7 +68,7 @@
 \newtheorem{assumption}[theorem]{Assumption}
 \newtheorem{conjecture}[theorem]{Conjecture}
 
-%Indicator Function
+% Indicator Function
 \newcommand{\ind}{1\hspace{-2.1mm}{1}}
 \newcommand{\I}{\mathtt{i}}
 \newcommand{\D}{\mathrm{d}}
@@ -81,7 +81,7 @@
 \def\blue#1{\textcolor{blue}{#1}}
 \def\red#1{\textcolor{red}{#1}}
 
-% New Comment for todonotes
+% New Comment for todo notes
 \newcommand{\insertref}[1]{\todo[color=green!40]{RefMissing: #1}}
 \newcommand{\explainindetail}[1]{\todo[color=red!40]{Explain: #1}}
 \newcommand{\askfeedback}[1]{\todo[color=blue!40]{Feedback Required: #1}}
