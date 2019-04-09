@@ -2,10 +2,12 @@
 \NeedsTeXFormat{LaTeX2e}
 
 \newif\ifkclthesis@kclharvardbib
-\newif\ifkclthesis@kclieee
+\newif\ifkclthesis@biblatexieee
+\newif\ifkclthesis@natbibieee
 
 \DeclareOption{kclharvardbib}{\kclthesis@kclharvardbibtrue}
-\DeclareOption{kclieee}{\kclthesis@kclieeetrue}
+\DeclareOption{biblatexieee}{\kclthesis@biblatexieeetrue}
+\DeclareOption{natbibieee}{\kclthesis@natbibieeetrue}
 
 \ProcessOptions*
 
@@ -13,10 +15,19 @@
 
 \ifkclthesis@kclharvardbib
 	\RequirePackage{natbib}
+    \RequirePackage[UKenglish]{isodate}
 \fi
 
-\ifkclthesis@kclieee
-	\RequirePackage[numbers]{natbib}
+\ifkclthesis@biblatexieee
+	\usepackage[style=ieee, doi=true, backend=biber]{biblatex}
+	\usepackage[english]{babel}
+    \usepackage{csquotes}
+    \addbibresource{bibs/bibliography.bib}
+\fi
+
+\ifkclthesis@natbibieee
+    \RequirePackage[square, numbers]{natbib}
+    \RequirePackage[UKenglish]{isodate}
 \fi
 
 % Math fonts
@@ -24,7 +35,6 @@
 \RequirePackage{wasysym}
 
 % Additional Packages
-\RequirePackage[UKenglish]{isodate}
 \RequirePackage{color}
 \RequirePackage[nottoc, notlot, notlof]{tocbibind}
 \RequirePackage{hyperref}

@@ -1,4 +1,4 @@
-\documentclass[kclieee]{kclthesis}
+\documentclass[biblatexieee]{kclthesis}
 
 \usepackage[intoc]{nomencl}
 \usepackage[toc, acronym]{glossaries}
@@ -57,13 +57,17 @@
 \include{contents/introduction}
 \include{contents/background}
 \include{contents/main}
-%\include{contents/conclusion}
+\include{contents/conclusion}
 \include{contents/nomenclature}
 
 %%%%% References
 % For KCL Harvard V1: \bibliographystyle{kclharvardv1}
-\bibliographystyle{ieeetr}
-\bibliography{bibs/bibliography}
+% For natbib-ieee: 
+% \bibliographystyle{ieeetr}
+% \bibliography{bibs/bibliography}
+% For biblatex-ieee:
+\nocite{*}
+\printbibliography
 
 %%%%% Declaration
 \include{structure/declaration}
