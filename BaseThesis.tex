@@ -11,7 +11,7 @@
 \studentnumber{1844311}
 \programme{MSc Web Intelligence}
 \supervisor{Josh Murphy}
-\wordcount{1205}
+\wordcount{1574}
 
 \makenomenclature
 \makeglossaries
@@ -22,13 +22,13 @@
 \maketitle
 
 %%%%%% empty page after main page.
-\newpage
-\thispagestyle{empty}
-\mbox{}
+%\newpage
+%\thispagestyle{empty}
+%\mbox{}
 \newpage
 
 %%%%%% Abstract
-\include{contents/abstract}
+%\include{contents/abstract}
 
 %%%%%% Table of contents
 \pagenumbering{roman}
@@ -38,7 +38,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\include{structure/figures_tables}
-\include{structure/acknowledgements}
+%\include{structure/acknowledgements}
 \fancyhead{}
 \fancyfoot{}
 \pagestyle{fancy} 
@@ -56,21 +56,23 @@
 %\include{TODO/todo}
 \include{contents/introduction}
 \include{contents/background}
-\include{contents/main}
-\include{contents/conclusion}
+\include{contents/literature}
+%\include{contents/main}
+%\include{contents/conclusion}
 \include{contents/nomenclature}
 
 %%%%% References
+% \nocite{*}
+
 % For KCL Harvard V1: \bibliographystyle{kclharvardv1}
 % For natbib-ieee: 
 % \bibliographystyle{ieeetr}
 % \bibliography{bibs/bibliography}
 % For biblatex-ieee:
-\nocite{*}
 \printbibliography
 
 %%%%% Declaration
-\include{structure/declaration}
+%\include{structure/declaration}
 
 %%%%% Appendix 
 \appendix
