@@ -19,9 +19,9 @@
 \fi
 
 \ifkclthesis@biblatexieee
-	\usepackage[style=ieee, doi=true, backend=biber]{biblatex}
-	\usepackage[english]{babel}
-    \usepackage{csquotes}
+	\RequirePackage[style=ieee, doi=true, backend=biber]{biblatex}
+	\RequirePackage[english]{babel}
+    \RequirePackage{csquotes}
     \addbibresource{bibs/bibliography.bib}
 \fi
 
@@ -35,16 +35,25 @@
 \RequirePackage{wasysym}
 
 % Additional Packages
-\RequirePackage{color}
+\RequirePackage[table]{xcolor}
 \RequirePackage[nottoc, notlot, notlof]{tocbibind}
 \RequirePackage{hyperref}
+\RequirePackage[capitalise, nameinlink]{cleveref}
 \RequirePackage{fancyhdr}
 \RequirePackage{subfigure}
 \RequirePackage[textsize = tiny, figwidth = 8cm]{todonotes}
+\RequirePackage{array}
+\RequirePackage{booktabs}
+\RequirePackage{tikz}
+\RequirePackage{enumitem}
+\RequirePackage[intoc]{nomencl}
+\RequirePackage[toc, acronym]{glossaries}
+
+\usetikzlibrary{arrows}
 
 % Cover Page
 \RequirePackage{graphicx}
-\RequirePackage[paper=a4paper]{geometry}
+\RequirePackage[paper = a4paper]{geometry}
 \RequirePackage{setspace}
 \RequirePackage{framed}
 
@@ -66,7 +75,6 @@
 \newcommand*{\signdate}[1]{\gdef\@signdate{#1}}
 \newcommand*{\@signdate}{\today}
 
-
 % MACRO 
 \newfam\msbfam
 \def\Bbb#1{\fam\msbfam\relax#1}
@@ -78,7 +86,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 
 \theoremstyle{definition}
-\newtheorem{definition}[theorem]{Definition}
+\newtheorem{definition}{Definition}[section]
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{notation}[theorem]{Notation}
 \newtheorem{assumption}[theorem]{Assumption}
@@ -89,6 +97,7 @@
 \newcommand{\I}{\mathtt{i}}
 \newcommand{\D}{\mathrm{d}}
 \newcommand{\E}{\mathrm{e}}
+\newcommand{\Z}{\mathds{Z}}
 \newcommand{\RR}{\mathbb{R}}
 \newcommand{\sgn}{\mathrm{sgn}}
 \newcommand{\atanh}{\mathrm{arctanh}}

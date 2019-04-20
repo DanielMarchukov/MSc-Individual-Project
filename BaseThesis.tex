@@ -1,8 +1,5 @@
 \documentclass[biblatexieee]{kclthesis}
 
-\usepackage[intoc]{nomencl}
-\usepackage[toc, acronym]{glossaries}
-
 \title{Argument Mining on Social Media}
 \author{Danielius Marciukovas}
 \modulecode{7CCSMPRJ}
@@ -11,7 +8,7 @@
 \studentnumber{1844311}
 \programme{MSc Web Intelligence}
 \supervisor{Josh Murphy}
-\wordcount{1574}
+\wordcount{2328}
 
 \makenomenclature
 \makeglossaries
@@ -22,13 +19,13 @@
 \maketitle
 
 %%%%%% empty page after main page.
-%\newpage
-%\thispagestyle{empty}
-%\mbox{}
+% \newpage
+% \thispagestyle{empty}
+% \mbox{}
 \newpage
 
 %%%%%% Abstract
-%\include{contents/abstract}
+% \include{contents/abstract}
 
 %%%%%% Table of contents
 \pagenumbering{roman}
@@ -37,28 +34,29 @@
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\include{structure/figures_tables}
-%\include{structure/acknowledgements}
+\include{structure/figures_tables}
+% \include{structure/acknowledgements}
 \fancyhead{}
 \fancyfoot{}
 \pagestyle{fancy} 
 \fancyhead[R,L]{\sffamily\small \thepage}
 \fancyhead[LO]{\sffamily\small \nouppercase{\rightmark}}
 
-%\fancyhead[RO,L]{\sffamily\small \thepage}
-%\fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
+% \fancyhead[RO,L]{\sffamily\small \thepage}
+% \fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.0pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Main content
 \pagenumbering{arabic}
-%\include{TODO/todo}
+% \include{TODO/todo}
 \include{contents/introduction}
-\include{contents/background}
 \include{contents/literature}
-%\include{contents/main}
-%\include{contents/conclusion}
+\include{contents/background}
+\include{miscs/schedpar}
+% \include{contents/main}
+% \include{contents/conclusion}
 \include{contents/nomenclature}
 
 %%%%% References
@@ -72,10 +70,10 @@
 \printbibliography
 
 %%%%% Declaration
-%\include{structure/declaration}
+% \include{structure/declaration}
 
 %%%%% Appendix 
-\appendix
-\include{appendix/app_1}
+% \appendix
+% \include{appendix/apx_A}
 
 \end{document}

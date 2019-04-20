@@ -1,3 +1,105 @@
-\section{Background} 
-\subsection{Technical Background}
-This section describes what the reader has to know in order to understand my project.
+\section{Technical Background} 
+    \subsection{Abstract Argumentation Framework}
+        The \textit{argumentation framework} described here is based on \autocite{Dung1995OnTA}. Dung's \gls{af} considers the arguments to be abstract entities without paying any consideration to their internal structure. The way that argument's role is computed is by looking how it relates to other arguments within the argument set.
+        
+        \begin{definition}
+            An \textit{\gls{aaf}} is a tuple $\langle S, \text{ }R \rangle$, where $S$ is a set of \textit{arguments} and $R \subseteq S \times S$ is an \textit{attack relation}.
+            \label{definition:definition1}
+        \end{definition}
+        
+        \begin{remark}
+            The terms \textit{argumentation framework} and \textit{abstract argumentation framework} will be used interchangeably throughout this document.
+            \label{remark:remark1}
+        \end{remark}
+        
+        The \gls{aaf} is represented as a directed graph. Arguments are displayed as nodes and an arrow from node $a$ to node $b$ represents that argument $a$ is attacking argument $b$.
+        \begin{exa}
+            Assume the following arguments:
+            \begin{enumerate}[label=\alph* -]
+                \item Today is sunny, we should go out to the park.
+                \item I have to study at home for the upcoming exams.
+                \item You still have over a month to prepare, so going out for one day won't hurt.
+            \end{enumerate}
+            \label{exa:example1}
+        \end{exa}
+        
+        The above dialogue example can be represented as an \textit{abstract argumentation framework} $\langle S, \text{ }R \rangle$ where $S = \{a, b, c\}$ and $R = \{(a, b), (b, a), (c, b)\}$, as shown in \autoref{fig:aaf1example} below:
+        \input{figures/aaf1example}
+        
+        \gls{af} uses semantics to analyse what sets of nodes (\textit{arguments}) can be reasonably accepted given their \textit{attack relation}. Specifically, for the scope of this work, extension-based semantics are explored. An extension is a set of arguments that are jointly acceptable under special circumstances/properties. An acceptable set of arguments is shown in \autoref{fig:aaf1examplecolorized}, following the \cref{exa:example1}.
+        \input{figures/aaf1examplecolorized}
+        
+        Before introducing different extensions, some concepts have to be defined first.
+        \begin{definition}
+            A set $T \subseteq S$ is \textit{conflict-free} if and only if $ \forall a, b \in T, (a, b) \notin R$
+            \label{definition:definition2}
+        \end{definition}
+        \begin{exa}
+            The conflict-free subsets of \autoref{fig:aaf1example} are: $\{\}, \{a\}, \{b\}, \{c\}, \{a, c\}$.
+            \label{exa:example2}
+        \end{exa}
+        
+        \begin{definition}
+            A set $T \subseteq S$ \textit{defends} $b$ if and only if $ \forall a \in S$ such that $(a, b) \in R$ there exists $\exists c \in T$ such that $(c, a) \in R$.
+            \label{definition:definition3}
+        \end{definition}
+        \begin{exa}
+            By looking at \autoref{fig:aaf1example}, the set $\{c\}$ defends $a$ and $\{\}$ defends $c$.
+            \label{exa:example3}
+        \end{exa}
+        
+        \begin{definition}
+            A set $T \subseteq S$ is \textit{admissible} if and only if $T$ is \textit{conflict-free} and \textit{defends} each argument that is a member of $T$.
+            \label{definition:definition4}
+        \end{definition}
+        \begin{exa}
+            By looking at \autoref{fig:aaf1example}, the admissible sets are:  $\{\}, \{a\}, \{c\}, \{a, c\}$.
+            \label{exa:example4}
+        \end{exa}
+        
+        \begin{definition}
+            $A$ is a \textit{maximal subset} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A \subsetneq A'$.
+            \label{definition:definition5}
+        \end{definition}
+        \begin{exa}
+            Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The maximal subsets of $C$ in $S$ are $\{a, b\}$ and $\{b, c\}$.
+            \label{exa:example5}
+        \end{exa}
+        
+        \begin{definition}
+            $A$ is a \textit{minimal} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A' \subsetneq A$.
+            \label{definition:definition6}
+        \end{definition}
+        \begin{exa}
+            Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The minimal subsets of $C$ in $S$ are $\{a\}$ and $\{b\}$.
+            \label{exa:example6}
+        \end{exa}
+        
+        Now moving on to semantic extensions:
+        \begin{definition}
+            A \textit{complete extension} is an admissible set that includes \textit{all} arguments it defends.
+            \label{definition:definition7}
+        \end{definition}
+        
+        \begin{definition}
+            A \textit{grounded extension} is the minimal subset of the set of \textit{complete extensions}.
+            \label{definition:definition8}
+        \end{definition}
+        \begin{exa}
+            From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Grounded extensions are: $\{a\}$.
+            \label{exa:example8}
+        \end{exa}
+        
+        \input{figures/aaf2example}
+        
+        \begin{definition}
+            A \textit{preferred extension} is the maximal subset of the set of \textit{complete extensions}.
+            \label{definition:definition9}
+        \end{definition}
+        \begin{exa}
+            From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Preferred extensions are: $\{a, c\}, \{a. d\}$.
+            \label{exa:example9}
+        \end{exa}
+        
+    \subsection{Bipolar Argumentation Framework}
+        
