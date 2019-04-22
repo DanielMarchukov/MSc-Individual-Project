@@ -29,77 +29,155 @@
         \gls{af} uses semantics to analyse what sets of nodes (\textit{arguments}) can be reasonably accepted given their \textit{attack relation}. Specifically, for the scope of this work, extension-based semantics are explored. An extension is a set of arguments that are jointly acceptable under special circumstances/properties. An acceptable set of arguments is shown in \autoref{fig:aaf1examplecolorized}, following the \cref{exa:example1}.
         \input{figures/aaf1examplecolorized}
         
-        Before introducing different extensions, some concepts have to be defined first.
-        \begin{definition}
-            A set $T \subseteq S$ is \textit{conflict-free} if and only if $ \forall a, b \in T, (a, b) \notin R$
-            \label{definition:definition2}
-        \end{definition}
-        \begin{exa}
-            The conflict-free subsets of \autoref{fig:aaf1example} are: $\{\}, \{a\}, \{b\}, \{c\}, \{a, c\}$.
-            \label{exa:example2}
-        \end{exa}
+        \subsubsection{Main Concepts}
+            Before introducing different extensions, some concepts have to be defined first.
+            \begin{definition}
+                A set $T \subseteq S$ is \textit{conflict-free} if and only if $ \forall a, b \in T, (a, b) \notin R$
+                \label{definition:definition2}
+            \end{definition}
+            \begin{exa}
+                The conflict-free subsets of \autoref{fig:aaf1example} are: $\{\}, \{a\}, \{b\}, \{c\}, \{a, c\}$.
+                \label{exa:example2}
+            \end{exa}
+            
+            \begin{definition}
+                A set $T \subseteq S$ \textit{defends} $b$ if and only if $ \forall a \in S$ such that $(a, b) \in R$ there exists $\exists c \in T$ such that $(c, a) \in R$.
+                \label{definition:definition3}
+            \end{definition}
+            \begin{exa}
+                By looking at \autoref{fig:aaf1example}, the set $\{c\}$ defends $a$ and $\{\}$ defends $c$.
+                \label{exa:example3}
+            \end{exa}
+            
+            \begin{definition}
+                A set $T \subseteq S$ is \textit{admissible} if and only if $T$ is \textit{conflict-free} and \textit{defends} each argument that is a member of $T$.
+                \label{definition:definition4}
+            \end{definition}
+            \begin{exa}
+                By looking at \autoref{fig:aaf1example}, the admissible sets are:  $\{\}, \{a\}, \{c\}, \{a, c\}$.
+                \label{exa:example4}
+            \end{exa}
+            
+            \begin{definition}
+                $A$ is a \textit{maximal subset} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A \subsetneq A'$.
+                \label{definition:definition5}
+            \end{definition}
+            \begin{exa}
+                Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The maximal subsets of $C$ in $S$ are $\{a, b\}$ and $\{b, c\}$.
+                \label{exa:example5}
+            \end{exa}
+            
+            \begin{definition}
+                $A$ is a \textit{minimal} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A' \subsetneq A$.
+                \label{definition:definition6}
+            \end{definition}
+            \begin{exa}
+                Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The minimal subsets of $C$ in $S$ are $\{a\}$ and $\{b\}$.
+                \label{exa:example6}
+            \end{exa}
         
-        \begin{definition}
-            A set $T \subseteq S$ \textit{defends} $b$ if and only if $ \forall a \in S$ such that $(a, b) \in R$ there exists $\exists c \in T$ such that $(c, a) \in R$.
-            \label{definition:definition3}
-        \end{definition}
-        \begin{exa}
-            By looking at \autoref{fig:aaf1example}, the set $\{c\}$ defends $a$ and $\{\}$ defends $c$.
-            \label{exa:example3}
-        \end{exa}
-        
-        \begin{definition}
-            A set $T \subseteq S$ is \textit{admissible} if and only if $T$ is \textit{conflict-free} and \textit{defends} each argument that is a member of $T$.
-            \label{definition:definition4}
-        \end{definition}
-        \begin{exa}
-            By looking at \autoref{fig:aaf1example}, the admissible sets are:  $\{\}, \{a\}, \{c\}, \{a, c\}$.
-            \label{exa:example4}
-        \end{exa}
-        
-        \begin{definition}
-            $A$ is a \textit{maximal subset} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A \subsetneq A'$.
-            \label{definition:definition5}
-        \end{definition}
-        \begin{exa}
-            Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The maximal subsets of $C$ in $S$ are $\{a, b\}$ and $\{b, c\}$.
-            \label{exa:example5}
-        \end{exa}
-        
-        \begin{definition}
-            $A$ is a \textit{minimal} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A' \subsetneq A$.
-            \label{definition:definition6}
-        \end{definition}
-        \begin{exa}
-            Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The minimal subsets of $C$ in $S$ are $\{a\}$ and $\{b\}$.
-            \label{exa:example6}
-        \end{exa}
-        
-        Now moving on to semantic extensions:
-        \begin{definition}
-            A \textit{complete extension} is an admissible set that includes \textit{all} arguments it defends.
-            \label{definition:definition7}
-        \end{definition}
-        
-        \begin{definition}
-            A \textit{grounded extension} is the minimal subset of the set of \textit{complete extensions}.
-            \label{definition:definition8}
-        \end{definition}
-        \begin{exa}
-            From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Grounded extensions are: $\{a\}$.
-            \label{exa:example8}
-        \end{exa}
-        
-        \input{figures/aaf2example}
-        
-        \begin{definition}
-            A \textit{preferred extension} is the maximal subset of the set of \textit{complete extensions}.
-            \label{definition:definition9}
-        \end{definition}
-        \begin{exa}
-            From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Preferred extensions are: $\{a, c\}, \{a. d\}$.
-            \label{exa:example9}
-        \end{exa}
+        \subsubsection{Semantic Extensions}
+            Now moving on to semantic extensions:
+            \begin{definition}
+                A \textit{complete extension} is an admissible set that includes \textit{all} arguments it defends.
+                \label{definition:definition7}
+            \end{definition}
+            
+            \begin{definition}
+                A \textit{grounded extension} is the minimal subset of the set of \textit{complete extensions}.
+                \label{definition:definition8}
+            \end{definition}
+            \begin{exa}
+                From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Grounded extensions are: $\{a\}$.
+                \label{exa:example8}
+            \end{exa}
+            \input{figures/aaf2example}
+            \begin{definition}
+                A \textit{preferred extension} is the maximal subset of the set of \textit{complete extensions}.
+                \label{definition:definition9}
+            \end{definition}
+            \begin{exa}
+                From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Preferred extensions are: $\{a, c\}, \{a. d\}$.
+                \label{exa:example9}
+            \end{exa}
         
     \subsection{Bipolar Argumentation Framework}
+        The limitation with \gls{aaf}s is that only conflicting relations are captured. The framework has difficulties capturing \textit{support} arguments, that is, when one argument is in agreement of the other. \gls{baf} aims at extending upon the concepts presented by Dung's framework \autocite{Dung1995OnTA}. In \autocite{Cayrol2005OnTA}, the author introduces another dimension through which argument relations can be captured and incorporates it into \gls{aaf}. 
         
+        In terms of the framework (graph) itself, nodes still represent the \textit{arguments}, and solid arrows represent \textit{attacks}. \textit{Support} relation is also represented as an arrow, indicating that argument $a$ supports argument $b$. There are no strict requirements for how the arrows have to be drawn within the framework, so in this project a dotted arrow will be used to indicate \textit{support} (see \autoref{fig:baf1example}).
+        
+        \begin{definition}
+            An \textit{Abstract Bipolar Argumentation Framework} is a tuple $\langle S, \text{ }R_{att}, \text{ }R_{sup} \rangle$, where $S$ is a set of \textit{arguments},  $R_{att}$ is a binary \textit{attack relation} and $R_{sup}$ is a binary \textit{support relation}.
+            \label{definition:definition10}
+        \end{definition}
+        \begin{exa}
+            Take $T_{i}$, $T_{j} \in S$. $T_{i}R_{att}T_{j}$ (contrastively, $T_{i}R_{sup}T_{j}$) indicates that $T_{i}$ attacks $T_{j}$ (respectively, $T_{i}$ supports $T_{j}$).
+            \label{exa:example10}
+        \end{exa}
+        
+        \input{figures/baf1example}
+        
+        \subsubsection{Main Concepts}
+            The main concepts and definitions of \gls{baf} are presented briefly, based on \autocite{Cayrol2005OnTA}. Firstly, two definitions of attacks are introduced, being \textit{supported} and \textit{indirect}:
+            
+            \begin{definition}
+                Take $A$, $B \subseteq S$. A \textit{supported attack} is a sequence of arguments and relations $A_{1} R_{1} \ldots R_{n - 1} A_{n}$, $n \geq 3$ with $A_{n}$ $=$ $B$, $\forall i$ = $1 \ldots n$ $-$ $2$, $R_{i}$ $=$ $R_{sup}$ and $R_{n - 1}$ $=$ $R_{att}$.
+                \label{definition:definition11}
+            \end{definition}
+            
+            \begin{definition}
+                Take $A$, $B \subseteq S$. An \textit{indirect attack} is a sequence of arguments and relations $A_{1} R_{1} \ldots R_{n - 1} A_{n}$, $n \geq 3$ with $A_{n}$ $=$ $B$, $\forall i$ = $2 \ldots n$ $-$ $1$, $R_{i}$ $=$ $R_{sup}$ and $R_{1}$ $=$ $R_{att}$.
+                \label{definition:definition12}
+            \end{definition}
+            
+            \begin{exa}
+                From \autoref{fig:baf1example} it can be seen that sequences $a \rightarrow d \rightarrow g \rightarrow h$ and $e \rightarrow g$ are supported attacks. Subsequently, the sequence $b \rightarrow a \rightarrow d \rightarrow g$ is an indirect attack.
+                \label{exa:example11}
+            \end{exa}
+            
+            Next, the \textit{argument-set} versus the \textit{argument} relations are also defined, namely \textit{set-attacks}, \textit{set-supports} and \textit{set-defends}.
+            
+            \begin{definition}
+                Take $T \subseteq S$ and $B \in S$. A \textit{set-attack} from $T$ to $B$ is if and only if there exists a \textit{supported attack} or an \textit{indirect attack} against $B$ from an argument in set $T$.
+                \label{definition:definition13}
+            \end{definition}
+            
+            \begin{definition}
+                Take $T \subseteq S$ and $B \in S$. A \textit{set-support} relation from set $T$ to argument $B$ is if and only if in the sequence $T_{1} R_{1} \ldots R_{n - 1} T_{n}$, $n \geq 2$, $\forall i$ = $1 \ldots n$ $-$ $1$, $R_{i}$ $=$ $R_{sup}$, $T_{n}$ $=$ $B$, $T_{n - 1} \in S$.
+                \label{definition:definition14}
+            \end{definition}
+            
+            \begin{exa}
+                From \autoref{fig:baf1example} it can be seen that a set with arguments $\{a, c\}$ set-attacks $h$ and $d$. Also, $\{a, c\}$ set-supports $d$.
+                \label{exa:example12}
+            \end{exa}
+            
+            \begin{definition}
+                Take $T \subseteq S$ and $A \in S$. A set $T$ \textit{set-defends} $A$ if and only if $\forall B \in S$, if $\{B\}$ \textit{set-attacks} $A$ $\implies$ $\exists C \in S$, $\{C\}$ \textit{set-attacks} $B$.
+                \label{definition:definition15}
+            \end{definition}
+            
+            \begin{exa}
+                From \autoref{fig:baf1example} it can be seen that a set with arguments $\{b, c, f\}$ and $\{b, c, e\}$ set-defends $h$. Also, $\{b, f\}$ does not set-defend $h$.
+                \label{exa:example13}
+            \end{exa}
+            
+            Before moving on to admissibility of sets, conflict-free, safe and closed sets are introduced and expanded upon.
+            
+            \begin{definition}
+                A \textit{conflict-free} set is a .
+                \label{definition:definition16}
+            \end{definition}
+            
+            \begin{definition}
+                A \textit{safe} set is a .
+                \label{definition:definition17}
+            \end{definition}
+            
+            \begin{definition}
+                A \textit{closed} set is a .
+                \label{definition:definition18}
+            \end{definition}
+            
+        \subsubsection{Semantic Extensions}
+            
