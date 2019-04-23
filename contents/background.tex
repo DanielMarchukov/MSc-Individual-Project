@@ -3,7 +3,7 @@
         The \textit{argumentation framework} described here is based on \autocite{Dung1995OnTA}. Dung's \gls{af} considers the arguments to be abstract entities without paying any consideration to their internal structure. The way that argument's role is computed is by looking how it relates to other arguments within the argument set.
         
         \begin{definition}
-            An \textit{\gls{aaf}} is a tuple $\langle S, \text{ }R \rangle$, where $S$ is a set of \textit{arguments} and $R \subseteq S \times S$ is an \textit{attack relation}.
+            An \textit{Abstract Argumentation Framework} is a tuple $\langle S$, $R \rangle$, where $S$ is a set of \textit{arguments} and $R \subseteq S \times S$ is an \textit{attack relation}.
             \label{definition:definition1}
         \end{definition}
         
@@ -36,7 +36,7 @@
                 \label{definition:definition2}
             \end{definition}
             \begin{exa}
-                The conflict-free subsets of \autoref{fig:aaf1example} are: $\{\}, \{a\}, \{b\}, \{c\}, \{a, c\}$.
+                The \textbf{conflict-free} subsets of \autoref{fig:aaf1example} are: $\{\}, \{a\}, \{b\}, \{c\}, \{a, c\}$.
                 \label{exa:example2}
             \end{exa}
             
@@ -45,7 +45,7 @@
                 \label{definition:definition3}
             \end{definition}
             \begin{exa}
-                By looking at \autoref{fig:aaf1example}, the set $\{c\}$ defends $a$ and $\{\}$ defends $c$.
+                By looking at \autoref{fig:aaf1example}, the set $\{c\}$ \textbf{defends} $a$ and $\{\}$ \textbf{defends} $c$.
                 \label{exa:example3}
             \end{exa}
             
@@ -54,25 +54,25 @@
                 \label{definition:definition4}
             \end{definition}
             \begin{exa}
-                By looking at \autoref{fig:aaf1example}, the admissible sets are:  $\{\}, \{a\}, \{c\}, \{a, c\}$.
+                By looking at \autoref{fig:aaf1example}, the \textbf{admissible} sets are:  $\{\}, \{a\}, \{c\}, \{a, c\}$.
                 \label{exa:example4}
             \end{exa}
             
             \begin{definition}
-                $A$ is a \textit{maximal subset} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A \subsetneq A'$.
+                $A$ is a \textit{maximal subset} of $S$ in $C$ iff $\nexists A' \in C$ such that $A \subsetneq A'$.
                 \label{definition:definition5}
             \end{definition}
             \begin{exa}
-                Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The maximal subsets of $C$ in $S$ are $\{a, b\}$ and $\{b, c\}$.
+                Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The \textbf{maximal} subsets of $C$ in $S$ are $\{a, b\}$ and $\{b, c\}$.
                 \label{exa:example5}
             \end{exa}
             
             \begin{definition}
-                $A$ is a \textit{minimal} of $S$ in $C$ if and only if $\nexists A' \in C$ such that $A' \subsetneq A$.
+                $A$ is a \textit{minimal subset} of $S$ in $C$ iff $\nexists A' \in C$ such that $A' \subsetneq A$.
                 \label{definition:definition6}
             \end{definition}
             \begin{exa}
-                Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The minimal subsets of $C$ in $S$ are $\{a\}$ and $\{b\}$.
+                Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The \textbf{minimal} subsets of $C$ in $S$ are $\{a\}$ and $\{b\}$.
                 \label{exa:example6}
             \end{exa}
         
@@ -88,7 +88,7 @@
                 \label{definition:definition8}
             \end{definition}
             \begin{exa}
-                From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Grounded extensions are: $\{a\}$.
+                From \autoref{fig:aaf2example} can be seen that \textbf{complete extensions} are: $\{a\}, \{a, c\}, \{a. d\}$. \textbf{Grounded extensions} are: $\{a\}$.
                 \label{exa:example8}
             \end{exa}
             \input{figures/aaf2example}
@@ -97,7 +97,7 @@
                 \label{definition:definition9}
             \end{definition}
             \begin{exa}
-                From \autoref{fig:aaf2example} can be seen that complete extensions are: $\{a\}, \{a, c\}, \{a. d\}$. Preferred extensions are: $\{a, c\}, \{a. d\}$.
+                From \autoref{fig:aaf2example} can be seen that \textbf{complete extensions} are: $\{a\}, \{a, c\}, \{a. d\}$. \textbf{Preferred extensions} are: $\{a, c\}, \{a. d\}$.
                 \label{exa:example9}
             \end{exa}
         
@@ -111,7 +111,7 @@
             \label{definition:definition10}
         \end{definition}
         \begin{exa}
-            Take $T_{i}$, $T_{j} \in S$. $T_{i}R_{att}T_{j}$ (contrastively, $T_{i}R_{sup}T_{j}$) indicates that $T_{i}$ attacks $T_{j}$ (respectively, $T_{i}$ supports $T_{j}$).
+            Take $T_{i}$, $T_{j} \in S$. $T_{i}R_{att}T_{j}$ (contrastively, $T_{i}R_{sup}T_{j}$) indicates that $T_{i}$ \textbf{attacks} $T_{j}$ (respectively, $T_{i}$ \textbf{supports} $T_{j}$).
             \label{exa:example10}
         \end{exa}
         
@@ -131,7 +131,7 @@
             \end{definition}
             
             \begin{exa}
-                From \autoref{fig:baf1example} it can be seen that sequences $a \rightarrow d \rightarrow g \rightarrow h$ and $e \rightarrow g$ are supported attacks. Subsequently, the sequence $b \rightarrow a \rightarrow d \rightarrow g$ is an indirect attack.
+                From \autoref{fig:baf1example} it can be seen that sequences $a \rightarrow d \rightarrow g \rightarrow h$ and $e \rightarrow g$ are \textbf{supported attacks}. Subsequently, the sequence $b \rightarrow a \rightarrow d \rightarrow g$ is an \textbf{indirect attack}.
                 \label{exa:example11}
             \end{exa}
             
@@ -148,7 +148,7 @@
             \end{definition}
             
             \begin{exa}
-                From \autoref{fig:baf1example} it can be seen that a set with arguments $\{a, c\}$ set-attacks $h$ and $d$. Also, $\{a, c\}$ set-supports $d$.
+                From \autoref{fig:baf1example} it can be seen that a set with arguments $\{a, c\}$ \textbf{set-attacks} $h$ and $d$. Also, $\{a, c\}$ \textbf{set-supports} $d$.
                 \label{exa:example12}
             \end{exa}
             
@@ -158,26 +158,70 @@
             \end{definition}
             
             \begin{exa}
-                From \autoref{fig:baf1example} it can be seen that a set with arguments $\{b, c, f\}$ and $\{b, c, e\}$ set-defends $h$. Also, $\{b, f\}$ does not set-defend $h$.
+                From \autoref{fig:baf1example} it can be seen that a set with arguments $\{b, c, f\}$ and $\{b, c, e\}$ \textbf{set-defends} $h$. Also, $\{b, f\}$ does not \textbf{set-defend} $h$.
                 \label{exa:example13}
             \end{exa}
             
             Before moving on to admissibility of sets, conflict-free, safe and closed sets are introduced and expanded upon.
             
             \begin{definition}
-                A \textit{conflict-free} set is a .
+                Take $T \subseteq S$. A \textit{conflict-free} set is a set of arguments $T$ if and only if $\nexists A$, $B \in T$, $\{A\} \text{ set-attacks } B$.
                 \label{definition:definition16}
             \end{definition}
+            \begin{exa}
+                From \autoref{fig:baf1example} it can be seen that the sets with arguments $\{c, d\}$ and $\{c, g\}$ are not \textbf{conflict-free}. On the other hand, $\{a, c\}$ and $\{d, i\}$ are \textbf{conflict-free}.
+                \label{exa:example14}
+            \end{exa}
             
             \begin{definition}
-                A \textit{safe} set is a .
+                Take $T \subseteq S$. A \textit{safe} set is a set of arguments $T$ if and only if $\nexists B \in S$ such that $T$ \textit{set-attacks} $A$ and either $A \in T$ or $T$ \textit{set-supports} $A$.
                 \label{definition:definition17}
             \end{definition}
+            \begin{exa}
+                From \autoref{fig:baf1example} it can be seen that the sets with arguments $\{a, c\}$ and $\{d, i\}$ are not \textbf{safe}. On the other hand, $\{b, c, f\}$ is \textbf{safe}.
+                \label{exa:example15}
+            \end{exa}
             
             \begin{definition}
-                A \textit{closed} set is a .
+                Take $T \subseteq S$ and $A$, $B \in S$. A \textit{closed} set for $R_{sup}$ is a set of arguments $T$ if and only if $A \in T$ such that $A R_{sup} B$, then the set $T$ also $B \in T$.
                 \label{definition:definition18}
             \end{definition}
+            \begin{exa}
+                From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, f, e\}$ is \textbf{closed}.
+                \label{exa:example16}
+            \end{exa}
             
         \subsubsection{Semantic Extensions}
+            The author of \autocite{Cayrol2005OnTA} proposed new semantic extensions that build up from the concepts in \autocite{Dung1995OnTA} and expand upon the acceptability of arguments within the \gls{baf}. Same as in previous section, they are briefly presented here.
             
+            \begin{definition}
+                Take $T \subseteq S$. A \textit{stable extension} is a set of arguments $T$ if and only if $T$ is \textit{conflict-free} and $\forall A \notin T$, $T$ \textit{set-attacks} $A$.
+                \label{definition:definition19}
+            \end{definition}
+            
+            \begin{definition}
+                Take $T \subseteq S$. A \textit{d-admissible} set is a set of arguments $T$ if and only if $T$ is \textit{conflict-free} and \textit{set-defends} all arguments in $T$.
+                \label{definition:definition20}
+            \end{definition}
+            
+            \begin{definition}
+                Take $T \subseteq S$. A \textit{s-admissible} set is a set of arguments $T$ if and only if $T$ is \textit{safe} and \textit{set-defends} all arguments in $T$.
+                \label{definition:definition21}
+            \end{definition}
+            
+            \begin{definition}
+                Take $T \subseteq S$. A \textit{c-admissible} set is a set of arguments $T$ if and only if is \textit{conflict-free}, \textit{closed} for $R_{sup}$ and \textit{set-defends} all arguments in $T$.
+                \label{definition:definition22}
+            \end{definition}
+            
+            \begin{definition}
+                Take $T \subseteq S$. A \textit{d-preferred (s-preferred, c-preferred) extension} is a set of arguments $T$ if and only if $T$ is maximal with respect to \textit{d-admissible (accordingly, s-admissible, c-admissible)} subsets of $S$. 
+                \label{definition:definition23}
+            \end{definition}
+            
+            \begin{exa}
+                From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, e, i\}$ is \textbf{s-admissible} and not \textbf{c-admissible}. Also, the set of arguments $\{b, c, e, i, f, h, k\}$ is a \textbf{c-preferred extension}.
+                \label{exa:example17}
+            \end{exa}
+            
+            In conclusion, the concepts, definitions and examples provided in the technical background section should sufficiently cover the theoretical knowledge required to understand the project. The next section dives into implementation details of the topic.

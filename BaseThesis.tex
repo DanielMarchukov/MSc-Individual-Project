@@ -6,74 +6,58 @@
 \department{Department of Informatics}
 \submissiontitle{Individual Project Submission 2018/19}
 \studentnumber{1844311}
+\emailaddress{danielius.marciukovas@kcl.ac.uk}
 \programme{MSc Web Intelligence}
 \supervisor{Josh Murphy}
-\wordcount{2688}
+\wordcount{3036}
 
 \makenomenclature
 \makeglossaries
 
 \begin{document}
-\pagenumbering{gobble}
-
-\maketitle
-
-%%%%%% empty page after main page.
-% \newpage
-% \thispagestyle{empty}
-% \mbox{}
-\newpage
-
-%%%%%% Abstract
-% \include{contents/abstract}
-
-%%%%%% Table of contents
-\pagenumbering{roman}
-\setcounter{tocdepth}{4}
-\tableofcontents
-\newpage
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{structure/figures_tables}
-% \include{structure/acknowledgements}
-\fancyhead{}
-\fancyfoot{}
-\pagestyle{fancy} 
-\fancyhead[R,L]{\sffamily\small \thepage}
-\fancyhead[LO]{\sffamily\small \nouppercase{\rightmark}}
-
-% \fancyhead[RO,L]{\sffamily\small \thepage}
-% \fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0.0pt}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%% Main content
-\pagenumbering{arabic}
-% \include{TODO/todo}
-\include{contents/introduction}
-\include{contents/literature}
-\include{contents/background}
-\include{miscs/schedpar}
-% \include{contents/main}
-% \include{contents/conclusion}
-\include{contents/nomenclature}
-
-%%%%% References
-% \nocite{*}
-
-% For KCL Harvard V1: \bibliographystyle{kclharvardv1}
-% For natbib-ieee: 
-% \bibliographystyle{ieeetr}
-% \bibliography{bibs/bibliography}
-% For biblatex-ieee:
-\printbibliography
-
-%%%%% Declaration
-% \include{structure/declaration}
-
-%%%%% Appendix 
-% \appendix
-% \include{appendix/apx_A}
+    \pagenumbering{gobble}
+    
+    \maketitle
+    \include{structure/emptyPage}
+    % \include{contents/abstract}
+    \include{structure/tableOfContents}
+    \include{structure/figures_tables}
+    % \include{structure/acknowledgements}
+    \fancyhead{}
+    \fancyfoot{}
+    \pagestyle{fancy} 
+    \fancyhead[R,L]{\sffamily\small \thepage}
+    \fancyhead[LO]{\sffamily\small \nouppercase{\rightmark}}
+    
+    % \fancyhead[RO,L]{\sffamily\small \thepage}
+    % \fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.0pt}
+    
+    \pagenumbering{arabic}
+    \include{contents/introduction}
+    \include{contents/literature}
+    \include{contents/background}
+    \include{miscs/schedpar}
+    % \include{contents/main}
+    % \include{contents/conclusion}
+    \include{contents/nomenclature}
+    
+    %%%%% References
+    % \nocite{*}
+    
+    % For KCL Harvard V1: \bibliographystyle{kclharvardv1}
+    % For natbib-ieee: 
+    % \bibliographystyle{ieeetr}
+    % \bibliography{bibs/bibliography}
+    % For biblatex-ieee:
+    \printbibliography
+    
+    %%%%% Declaration
+    % \include{structure/declaration}
+    
+    %%%%% Appendix 
+    % \appendix
+    % \include{appendix/apx_A}
 
 \end{document}

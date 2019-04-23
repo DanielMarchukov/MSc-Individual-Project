@@ -66,6 +66,8 @@
 \newcommand*{\@submissiontitle}{\red{Missing Submission title}}
 \newcommand*{\studentnumber}[1]{\gdef\@studentnumber{#1}}
 \newcommand*{\@studentnumber}{\red{Missing Studentnumber}}
+\newcommand*{\emailaddress}[1]{\gdef\@emailaddress{#1}}
+\newcommand*{\@emailaddress}{\red{Missing Email Address}}
 \newcommand*{\programme}[1]{\gdef\@programme{#1}}
 \newcommand*{\@programme}{\red{Missing Program}}
 \newcommand*{\supervisor}[1]{\gdef\@supervisor{#1}}
@@ -129,7 +131,7 @@
 		\includegraphics[width = 3.25cm]{img/kcl}
 	\end{flushright}
 \end{minipage}
-\vspace{1cm}
+\vspace{0.5cm}
 
 \doublespacing{
 \begin{minipage}{\textwidth}
@@ -139,16 +141,16 @@
 \end{minipage}%
 
 
-\vspace{0.5cm}
+\vspace{1cm}
 
 \begin{minipage}{0.3\textwidth}
 	\begin{flushleft}
-	\textbf{Name:\\Student Number:\\Degree Programme:\\Project Title:\\ Supervisor:\\ Word Count:\\}
+	\textbf{Name:\\Student Number:\\Email Address:\\Degree Programme:\\Project Title:\\ Supervisor:\\ Word Count:\\}
 	\end{flushleft}
 \end{minipage}%
 \begin{minipage}{0.7\textwidth}
 	\begin{flushleft}
-	\@author \\ \@studentnumber \\ \@programme \\ \@title \\ \@supervisor \\ \@wordcount
+	\@author \\ \@studentnumber \\ \@emailaddress \\ \@programme \\ \@title \\ \@supervisor \\ \@wordcount
 	\end{flushleft}
 \end{minipage}
 }
@@ -157,15 +159,13 @@
 \begin{minipage}{\textwidth}
 	\begin{framed}
 		Plagiarism Statement\\
-		All work submitted as part of the requirements for any examination or assessment must be expressed in your own words and incorporates your own ideas and judgements. Plagiarism is the taking and using of another person’s thoughts, words, judgements, ideas, etc., as your own without any indication that they are those of another person.\\
-		Plagiarism is a serious examination offence. An allegation of plagiarism can result in action being taken under the \textit{B3 Misconduct Regulations}. 
+		All work submitted as part of the requirements for any examination or assessment must be expressed in your own words and incorporates your own ideas and judgements. Plagiarism is the taking and using of another person’s thoughts, words, judgements, ideas, etc., as your own without any indication that they are those of another person. \\ Plagiarism is a serious examination offence. An allegation of plagiarism can result in action being taken under the \textit{B3 Misconduct Regulations}. 
 	\end{framed}
-
 
 I acknowledge that I have read and understood the above information and that the work I am submitting is my own. 
 \end{minipage}
 
-\vspace{1.5cm}
+\vspace{1cm}
 
 \begin{minipage}{0.5\textwidth}
 \begin{flushleft}
