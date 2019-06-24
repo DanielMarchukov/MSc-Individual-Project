@@ -5,13 +5,44 @@
     
     The second subsection, \nameref{twitterdata}, discusses how twitter data was gathered, how it was preprocessed and why it had to be done, while also explaining challenges associated with it.
     
-    In \nameref{devlstm}, the whole development process of \gls{lstm} is described, covering everything from development decisions, training, validation and testing of the neural network and including a discussion of obtained results while comparing them with existing similar work performed previously. 
+    In \nameref{devlstm} subsection, the whole development process of \gls{lstm} is described, covering everything from development decisions, training, validation and testing of the neural network and including a discussion of obtained results while comparing them with existing similar work performed previously. 
 
     \subsection{Technology Stack} \label{techstack}
+        The chosen technology stack is as follows:
+        \begin{itemize}
+            \item Programming language Python version 3.7. There is a reason why Python is the de facto language for all purposes Machine Learning, Deep Learning, Data Science and Analysis, and this is because of the vast amount of libraries that enable the developer to easily incorporate the functionality in any project. Nonetheless, the core calculations of those libraries are done in C/C++ language and Python is used as a wrapper for easy access and compatibility, which makes memory intensive computations all the more efficient.
+            
+            \item The most popular library that delivers upon the objectives of the project is TensorFlow, and as such it is used in this project. It's popularity speaks volumes as there is a vast amount of guides easily accessible and extendable into solving complex problems (such as Recognizing Textual Entailment, for example). Also, the documentation is full with up to date details, examples and clearly explaining differences between versions, whether past or upcoming changes.
+            
+            \item Tweepy was chosen to be used as Twitter API access library, because, first of all, is one of the not many libraries that are still maintained and updated today, constantly providing more and more flexibility with gathering of Twitter Data, and secondly, because of documentation providing lots of examples how to quickly set up and get up to speed.
+            
+            \item Anaconda was used as a package and dependency manager for Python, allowing easy and quick addition of various external libraries (Tweepy, TensorFlow and various sub dependencies). Moreover, PyCharm was used to fulfil the role of Integrated Development Environment for Python, mostly because of it having a lot more features than the free counterparts, as students can get Ultimate license free of charge for a year.
+            
+            \item Computer specifications include 16.0 GB of \gls{ram}, which was a limitation at some points during the \gls{snli} corpus (details about it are explained later) data processing (calculating data features list and classification scores). For \gls{lstm} training, evaluation and overall running, GeForce GTX 1080 Ti was used with 11.0 GB of dedicated memory and 8.0 GB of shared memory, making use of multiprocessing capabilities of the graphics card. All other calculations were performed on Intel i7-7700k @ 4.20 GHz speed.
+        \end{itemize}
 
     \subsection{Mining of Twitter Data} \label{twitterdata}
-    
+        Currently, the implementation of Data Mining comprises of the following steps:
+        \begin{itemize}
+            \item As the program connects to Twitter API, it fetches a single tweet based on specified parameters (topic or hashtag, amount to fetch, etc.).
+            
+            \item The fetched tweet is preprocessed, by removing stop words and performing lemmatization.
+            
+            \item Afterwards, the resulting text is saved into \gls{csv} file format, along with meta data about the tweet (timestamp, like count, etc.) for later use (such as passing it through \gls{lstm} predictions).
+        \end{itemize}
+        
+        The importance to perform an intermediate saving of the data into \gls{csv} file is to alleviate the pressure on \gls{ram}, there is no need to hold all the data in memory at this point.
+        
     \subsection{Development of Long Short-Term Memory Neural Network} \label{devlstm}
+        
+    \subsection{Evaluation and Comparison of LSTM Performance}
+    
+    \subsection{Graph Network Construction} \label{graphnetwork}
+        Due for second progress report.
+    
+    \subsection{Bipolar Argumentation Framework Analysis} \label{bapanalysis}
+        Due for second progress report.
+    
 % The chapter reports the contribution of your work.  For example, it could contain the following sub-sections to summarise the contribution of the project: Theoretical Development, Analysis and Design, Implementation and Experimental Work, Results, Observation and Discussion.
 
 % \subsection{Maths}
