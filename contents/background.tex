@@ -35,6 +35,9 @@
                 A set $T \subseteq S$ is \textit{conflict-free} if and only if $ \forall a, b \in T, (a, b) \notin R$
                 \label{definition:definition2}
             \end{definition}
+            
+            What this does is takes all possible subsets of arguments and eliminates those subsets that contain conflicting arguments. The rule here does not concern with arguments having different context or topic, the only thing that matters is the fact that one argument does not attack another in that same subset. A more formal example is given below:
+            
             \begin{exa}
                 The \textbf{conflict-free} subsets of \autoref{fig:aaf1example} are: $\{\}, \{a\}, \{b\}, \{c\}, \{a, c\}$.
                 \label{exa:example2}
@@ -44,6 +47,9 @@
                 A set $T \subseteq S$ \textit{defends} $b$ if and only if $ \forall a \in S$ such that $(a, b) \in R$ there exists $\exists c \in T$ such that $(c, a) \in R$.
                 \label{definition:definition3}
             \end{definition}
+            
+            For example, if there is an attack relationship from one argument to another, then the defence concept would be illustrated by having another argument which in this case would attack the attacker. Or in other words, if someone is attacked on the street and a third party comes along (e.g. the police) then according to the definition above, the police \textit{defends} the victim. A more formal example is given below:
+            
             \begin{exa}
                 By looking at \autoref{fig:aaf1example}, the set $\{c\}$ \textbf{defends} $a$ and $\{\}$ \textbf{defends} $c$.
                 \label{exa:example3}
@@ -53,13 +59,16 @@
                 A set $T \subseteq S$ is \textit{admissible} if and only if $T$ is \textit{conflict-free} and \textit{defends} each argument that is a member of $T$.
                 \label{definition:definition4}
             \end{definition}
+            
             \begin{exa}
                 By looking at \autoref{fig:aaf1example}, the \textbf{admissible} sets are:  $\{\}, \{a\}, \{c\}, \{a, c\}$.
                 \label{exa:example4}
             \end{exa}
             
+            This is simply a combination of the previous two definitions. This can be easily computed by having two sets representing \textit{conflict-free} and \textit{defence} accordingly and finding the intersection between them.
+            
             \begin{definition}
-                $A$ is a \textit{maximal subset} of $S$ in $C$ iff $\nexists A' \in C$ such that $A \subsetneq A'$.
+                $A$ is a \textit{maximal subset} of $S$ with respect to set inclusion in $C$ iff $\nexists A' \in C$ such that $A \subsetneq A'$.
                 \label{definition:definition5}
             \end{definition}
             \begin{exa}
@@ -67,14 +76,20 @@
                 \label{exa:example5}
             \end{exa}
             
+            In a more natural language terms, the maximal subset tries to take as many sets of arguments as possible such that the ones that are left (not included) are just smaller sets of (subsets) of the included ones.
+            
             \begin{definition}
-                $A$ is a \textit{minimal subset} of $S$ in $C$ iff $\nexists A' \in C$ such that $A' \subsetneq A$.
+                $A$ is a \textit{minimal subset} of $S$ with respect to set inclusion in $C$ iff $\nexists A' \in C$ such that $A' \subsetneq A$.
                 \label{definition:definition6}
             \end{definition}
             \begin{exa}
                 Take $S = \{a, b, c\}$ and let $C = \{\{a\}, \{b\}, \{a, b\}, \{b, c\}\}$. The \textbf{minimal} subsets of $C$ in $S$ are $\{a\}$ and $\{b\}$.
                 \label{exa:example6}
             \end{exa}
+            
+            The opposite goes for minimal subsets. Here the goal is to include the smallest sets of arguments (e.g. empty set or set with only a single argument in it) and exclude those sets of arguments that are supersets. 
+            
+            One thing to note is that in both cases, maximal and minimal sets, the goal is to include as many sets of arguments as possible, as long as the specified rules are met. Even though in both examples the result is that bigger set of arguments are in maximal set and smaller set of arguments is in minimal set, the size of the sets do not play a factor here. It could very well be a case where the same set containing of a number of arguments is in minimal and maximal subsets, as long as it does not break the defined rule.
         
         \subsubsection{Semantic Extensions}
             Now moving on to semantic extensions:
@@ -82,6 +97,8 @@
                 A \textit{complete extension} is an admissible set that includes \textit{all} arguments it defends.
                 \label{definition:definition7}
             \end{definition}
+            
+            Complete extension adds one more rule to admissible sets. Admissible set is said to contain arguments that do not attack each other (contradict) and include arguments that are defended by that set. Complete extension makes it so that \textit{all} defended arguments need to be included for the set to be considered complete.
             
             \begin{definition}
                 A \textit{grounded extension} is the minimal subset of the set of \textit{complete extensions}.
@@ -91,6 +108,9 @@
                 From \autoref{fig:aaf2example} can be seen that \textbf{complete extensions} are: $\{a\}, \{a, c\}, \{a. d\}$. \textbf{Grounded extensions} are: $\{a\}$.
                 \label{exa:example8}
             \end{exa}
+            
+            Grounded extension contains a set of arguments that are \textit{safe} to accept as the general consensus or winning arguments. They represent the base minimum outcome that can be claimed based on arguments presented.
+            
             \input{figures/aaf2example}
             \begin{definition}
                 A \textit{preferred extension} is the maximal subset of the set of \textit{complete extensions}.
@@ -100,6 +120,8 @@
                 From \autoref{fig:aaf2example} can be seen that \textbf{complete extensions} are: $\{a\}, \{a, c\}, \{a. d\}$. \textbf{Preferred extensions} are: $\{a, c\}, \{a. d\}$.
                 \label{exa:example9}
             \end{exa}
+            
+            The main difference in grounded and preferred extensions is the strictness on which arguments to include. The grounded extension provides a minimum amount of arguments that can be deducted as the overall result, while the preferred extensions tries to include as much as possible, thus including arguments in the results that might be a bit loose in terms of argumentative grounding.
         
     \subsection{Bipolar Argumentation Framework}
         The limitation with \gls{aaf}s is that only conflicting relations are captured. The framework has difficulties capturing \textit{support} arguments, that is, when one argument is in agreement of the other. \gls{baf} aims at extending upon the concepts presented by Dung's framework \autocite{Dung1995OnTA}. In \autocite{Cayrol2005OnTA}, the author introduces another dimension through which argument relations can be captured and incorporates it into \gls{aaf}. 
@@ -118,7 +140,9 @@
         \input{figures/baf1example}
         
         \subsubsection{Main Concepts}
-            The main concepts and definitions of \gls{baf} are presented briefly, based on \autocite{Cayrol2005OnTA}. Firstly, two definitions of attacks are introduced, being \textit{supported} and \textit{indirect}:
+            The main concepts and definitions of \gls{baf} are presented briefly, based on \autocite{Cayrol2005OnTA}. The main benefit of \gls{baf} is that another dimension is included, thus providing a way to model complex argumentative structures in a more representative manner. Previously, the aspect of \textit{support} in \gls{aaf} is always indirect, depicted mostly by argument \textit{defence}. This is an inaccurate assumption in \gls{aaf}, because two arguments being against something does not mean or imply that those two arguments are coming from the same standpoint. \gls{aaf} treats unrelated arguments as being on the same page or arguing for the same thing, as long as they both are targeting the same argument. \gls{baf} tries to solve this problem by separating \textit{attack} and \textit{support} relations.
+            
+            Firstly, two definitions of attacks are introduced, being \textit{supported} and \textit{indirect}:
             
             \begin{definition}
                 Take $A$, $B \subseteq S$. A \textit{supported attack} is a sequence of arguments and relations $A_{1} R_{1} \ldots R_{n - 1} A_{n}$, $n \geq 3$ with $A_{n}$ $=$ $B$, $\forall i$ = $1 \ldots n$ $-$ $2$, $R_{i}$ $=$ $R_{sup}$ and $R_{n - 1}$ $=$ $R_{att}$.
@@ -135,6 +159,10 @@
                 \label{exa:example11}
             \end{exa}
             
+            The supported attack concept can be visualised as follows: if two people are having an argument, and a third person sides with one of them, then the third person must be against the other one.
+            
+            For the indirect attacks, this means that, for example, if a person has an argument against one of political figure's supporters, then that same person must be against that political figure as well.
+            
             Next, the \textit{argument-set} versus the \textit{argument} relations are also defined, namely \textit{set-attacks}, \textit{set-supports} and \textit{set-defends}.
             
             \begin{definition}
@@ -147,6 +175,8 @@
                 \label{definition:definition14}
             \end{definition}
             
+            In other words, if within a set of arguments there is an argument that is attacking another argument outside of that set, then that can be regarded as a \textit{set-attack}. On the contrary, if in the argument set there exists a chain of support that contains all arguments from the set and extends into an argument outside of the set, then this is to be a \textit{set-support}. A more formal example is given below.
+            
             \begin{exa}
                 From \autoref{fig:baf1example} it can be seen that a set with arguments $\{a, c\}$ \textbf{set-attacks} $h$ and $d$. Also, $\{a, c\}$ \textbf{set-supports} $d$.
                 \label{exa:example12}
@@ -157,71 +187,123 @@
                 \label{definition:definition15}
             \end{definition}
             
+            The idea here is the same as the \textit{defence} in \gls{aaf} concepts, except here it is being dealt with a set of arguments instead of individual arguments.
+            
             \begin{exa}
                 From \autoref{fig:baf1example} it can be seen that a set with arguments $\{b, c, f\}$ and $\{b, c, e\}$ \textbf{set-defends} $h$. Also, $\{b, f\}$ does not \textbf{set-defend} $h$.
                 \label{exa:example13}
             \end{exa}
             
-            Before moving on to admissibility of sets, conflict-free, safe and closed sets are introduced and expanded upon.
+            Before moving on to admissibility of sets, conflict-free sets are introduced.
             
             \begin{definition}
                 Take $T \subseteq S$. A \textit{conflict-free} set is a set of arguments $T$ if and only if $\nexists A$, $B \in T$, $\{A\} \text{ set-attacks } B$.
                 \label{definition:definition16}
             \end{definition}
+            
+            The goal here is to have such set of arguments that do not contradict (attack) each other. This time the concern goes not only for individual relationships between arguments, but any combination of subsets of arguments as well.
+            
             \begin{exa}
                 From \autoref{fig:baf1example} it can be seen that the sets with arguments $\{c, d\}$ and $\{c, g\}$ are not \textbf{conflict-free}. On the other hand, $\{a, c\}$ and $\{d, i\}$ are \textbf{conflict-free}.
                 \label{exa:example14}
             \end{exa}
             
-            \begin{definition}
-                Take $T \subseteq S$. A \textit{safe} set is a set of arguments $T$ if and only if $\nexists B \in S$ such that $T$ \textit{set-attacks} $A$ and either $A \in T$ or $T$ \textit{set-supports} $A$.
-                \label{definition:definition17}
-            \end{definition}
-            \begin{exa}
-                From \autoref{fig:baf1example} it can be seen that the sets with arguments $\{a, c\}$ and $\{d, i\}$ are not \textbf{safe}. On the other hand, $\{b, c, f\}$ is \textbf{safe}.
-                \label{exa:example15}
-            \end{exa}
+            % SAFE DEFINITION
+            % \begin{definition}
+            %     Take $T \subseteq S$. A \textit{safe} set is a set of arguments $T$ if and only if $\nexists B \in S$ such that $T$ \textit{set-attacks} $A$ and either $A \in T$ or $T$ \textit{set-supports} $A$.
+            %     \label{definition:definition17}
+            % \end{definition}
+            % \begin{exa}
+            %     From \autoref{fig:baf1example} it can be seen that the sets with arguments $\{a, c\}$ and $\{d, i\}$ are not \textbf{safe}. On the other hand, $\{b, c, f\}$ is \textbf{safe}.
+            %     \label{exa:example15}
+            % \end{exa}
             
-            \begin{definition}
-                Take $T \subseteq S$ and $A$, $B \in S$. A \textit{closed} set for $R_{sup}$ is a set of arguments $T$ if and only if $A \in T$ such that $A R_{sup} B$, then the set $T$ also $B \in T$.
-                \label{definition:definition18}
-            \end{definition}
-            \begin{exa}
-                From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, f, e\}$ is \textbf{closed}.
-                \label{exa:example16}
-            \end{exa}
+            % CLOSED DEFINITION
+            % \begin{definition}
+            %     Take $T \subseteq S$ and $A$, $B \in S$. A \textit{closed} set for $R_{sup}$ is a set of arguments $T$ if and only if $A \in T$ such that $A R_{sup} B$, then the set $T$ also $B \in T$.
+            %     \label{definition:definition18}
+            % \end{definition}
+            % \begin{exa}
+            %     From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, f, e\}$ is \textbf{closed}.
+            %     \label{exa:example16}
+            % \end{exa}
             
         \subsubsection{Semantic Extensions}
             The author of \autocite{Cayrol2005OnTA} proposed new semantic extensions that build up from the concepts in \autocite{Dung1995OnTA} and expand upon the acceptability of arguments within the \gls{baf}. Same as in previous section, they are briefly presented here.
             
-            \begin{definition}
-                Take $T \subseteq S$. A \textit{stable extension} is a set of arguments $T$ if and only if $T$ is \textit{conflict-free} and $\forall A \notin T$, $T$ \textit{set-attacks} $A$.
-                \label{definition:definition19}
-            \end{definition}
+            % STABLE EXTENSION
+            % \begin{definition}
+            %     Take $T \subseteq S$. A \textit{stable extension} is a set of arguments $T$ if and only if $T$ is \textit{conflict-free} and $\forall A \notin T$, $T$ \textit{set-attacks} $A$.
+            %     \label{definition:definition19}
+            % \end{definition}
             
             \begin{definition}
                 Take $T \subseteq S$. A \textit{d-admissible} set is a set of arguments $T$ if and only if $T$ is \textit{conflict-free} and \textit{set-defends} all arguments in $T$.
                 \label{definition:definition20}
             \end{definition}
             
-            \begin{definition}
-                Take $T \subseteq S$. A \textit{s-admissible} set is a set of arguments $T$ if and only if $T$ is \textit{safe} and \textit{set-defends} all arguments in $T$.
-                \label{definition:definition21}
-            \end{definition}
+            An equivalent in \gls{aaf} would be the complete extension, ensuring that only non-contradicting arguments are included and additionally those that are defended.
+            
+            % SAFE AND CLOSED ADMISSIBLE
+            % \begin{definition}
+            %     Take $T \subseteq S$. A \textit{s-admissible} set is a set of arguments $T$ if and only if $T$ is \textit{safe} and \textit{set-defends} all arguments in $T$.
+            %     \label{definition:definition21}
+            % \end{definition}
+            
+            % \begin{definition}
+            %     Take $T \subseteq S$. A \textit{c-admissible} set is a set of arguments $T$ if and only if is \textit{conflict-free}, \textit{closed} for $R_{sup}$ and \textit{set-defends} all arguments in $T$.
+            %     \label{definition:definition22}
+            % \end{definition}
             
             \begin{definition}
-                Take $T \subseteq S$. A \textit{c-admissible} set is a set of arguments $T$ if and only if is \textit{conflict-free}, \textit{closed} for $R_{sup}$ and \textit{set-defends} all arguments in $T$.
-                \label{definition:definition22}
-            \end{definition}
-            
-            \begin{definition}
-                Take $T \subseteq S$. A \textit{d-preferred (s-preferred, c-preferred) extension} is a set of arguments $T$ if and only if $T$ is maximal with respect to \textit{d-admissible (accordingly, s-admissible, c-admissible)} subsets of $S$. 
+                Take $T \subseteq S$. A \textit{d-grounded extension} is a set of arguments $T$ if and only if $T$ is minimal with respect to \textit{d-admissible} subsets of $S$. 
                 \label{definition:definition23}
             \end{definition}
             
-            \begin{exa}
-                From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, e, i\}$ is \textbf{s-admissible} and not \textbf{c-admissible}. Also, the set of arguments $\{b, c, e, i, f, h, k\}$ is a \textbf{c-preferred extension}.
-                \label{exa:example17}
-            \end{exa}
+            \begin{definition}
+                Take $T \subseteq S$. A \textit{d-preferred extension} is a set of arguments $T$ if and only if $T$ is maximal with respect to \textit{d-admissible} subsets of $S$. 
+                \label{definition:definition24}
+            \end{definition}
+            
+            The two definitions above correspond to grounded and preferred extensions in \gls{aaf} respectively.
+            % \begin{exa}
+            %     From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, e, i\}$ is \textbf{s-admissible} and not \textbf{c-admissible}. Also, the set of arguments $\{b, c, e, i, f, h, k\}$ is a \textbf{c-preferred extension}.
+            %     \label{exa:example17}
+            % \end{exa}
             
             In conclusion, the concepts, definitions and examples provided in the technical background section should sufficiently cover the theoretical knowledge required to understand the project. The next section dives into implementation details of the topic.
+            
+    \subsection{Recurrent Neural Networks}
+        \gls{rnn} is a class of artificial neural networks where connections between nodes form a directed graph along a temporal sequence. The main feature of \gls{rnn}s is that when it receives an input, it looks not only at an input but also remembers what was fed to it in the past. Basic feed forward networks \textit{remember} things too, but they remember things they learnt during training. For example, an image classifier learns what a “1” looks like during training and then uses that knowledge to classify things in production.
+
+        While \gls{rnn} learns similarly while training, in addition, it remembers things learnt from prior input(s) while generating output(s). \gls{rnn}s can take one or more input vectors and produce one or more output vectors and the output(s) are influenced not just by weights applied on inputs like a regular neural network, but also by a hidden state vector representing the context based on prior input(s)/output(s). So, the same input could produce a different output depending on previous inputs in the series.
+        
+        In summary, in a vanilla neural network, a fixed size input vector is transformed into a fixed size output vector. Such a network becomes \textit{recurrent} when you repeatedly apply the transformations to a series of given input and produce a series of output vectors. There is no pre-set limitation to the size of the vector. And, in addition to generating the output which is a function of the input and hidden state, it updates the hidden sate itself based on the input and use it in processing the next input.
+        
+        % \subsubsection{Bidirectional RNNs}
+        %     Sometimes it is not just about learning from the past to predict the future, but it is also needed to look into the future to fix the past. In speech recognition and handwriting recognition tasks, where there could be considerable ambiguity given just one part of the input, it is often needed to know what is coming next to better understand the context and detect the present.
+    
+    \subsection{Long Short-Term Memory}
+        \gls{lstm} is a special kind of RNN, capable of learning long-term dependencies, introduced by \autocite{Hochreiter1997LongSM}. \gls{lstm}s are explicitly designed to avoid the long-term dependency problem or vanishing gradient problem. Remembering information for long periods of time is practically their default behaviour. All recurrent neural networks have the form of a chain of repeating modules of neural network. In standard \gls{rnn}s, this repeating module will have a very simple structure, such as a single tanh layer.
+        
+        \gls{lstm}s also have a chain like structure, but the repeating module has a different structure. Instead of having a single neural network layer, there are four, interacting in a very special way. The key to \gls{lstm}s is the cell state which runs straight down the entire chain, with only some minor linear interactions. It is very easy for information to just flow along it unchanged.
+        
+        The \gls{lstm} has the ability to remove or add information to the cell state, carefully regulated by structures called gates. Gates are a way to optionally let information through. They are composed out of a sigmoid neural net layer and a pointwise multiplication operation.
+        
+        The sigmoid layer outputs numbers between zero and one, describing how much of each component should be let through. A value of zero means \textit{let nothing through}, while a value of one means \textit{let everything through}. An LSTM has three of these gates, to protect and control the cell state.
+        
+        % First step
+        
+        The first step in \gls{lstm} is to decide what information is going to be thrown away from the cell state. This decision is made by a sigmoid layer called the \textit{forget gate layer}. It looks at $h_{t\!^{\_}1}$ and $x_t$, and outputs a number between 0 and 1 for each number in the cell state $C_{t\!^{\_}1}$. A 1 represents \textit{completely keep this} while a 0 represents the opposite.
+        
+        % Second step
+        
+        The next step is to decide what new information it is going to store in the cell state. This has two parts. First, a sigmoid layer called the \textit{input gate layer} decides which values will be updated. Next, a tanh layer creates a vector of new candidate values, $\zeta_t$, that could be added to the state.
+        
+        % Third step
+        
+        The old state, $C_{t\!^{\_}1}$, is updated into the new cell state $C_t$. The previous steps already decided what needs to be done - multiply the old state by $f_t$, forgetting the things that were decided to be forgotten earlier. Then it adds $i_{t}$ ∗ $\zeta_t$. These are the new candidate values, scaled by how much it decides to update each state value.
+        
+        % Fourth step
+        
+        Finally, \gls{lstm} needs to decide what it is going to output. This output will be based on the cell state, but will be a filtered version. First, it runs a sigmoid layer which decides what parts of the cell state are going to be output. Then, it puts the cell state through tanh (to push the values to be between −1 and 1) and multiplies it by the output of the sigmoid gate, so that it only outputs the parts it decided to.
