@@ -35,6 +35,8 @@
 \RequirePackage{wasysym}
 
 % Additional Packages
+\RequirePackage{placeins}
+\RequirePackage{tabularx}
 \RequirePackage[table]{xcolor}
 \RequirePackage[nottoc, notlot, notlof]{tocbibind}
 \RequirePackage{hyperref}

@@ -1,0 +1,166 @@
+\newcolumntype{L}{>{\centering\arraybackslash}m{5cm}}
+\newcolumntype{S}{>{\centering\arraybackslash}m{35mm}}
+\newcommand\setrow[1]{\gdef\rowmac{#1}#1\ignorespaces}
+            
+\section{Requirements Specification}
+    \subsection{Product Functions}
+        This section discusses the software requirements and explains the rationale behind them.
+        Firstly, \autoref{table:coreproductfunc} presents core functions that the software has to be able to perform. Each of the core functionalities are explained in more detail later on.
+        
+        \begin{table}[!htbp]
+            \centering
+            \caption{Core Product Functions}
+            \begin{tabular}{|>{\bfseries}c|L|c|}
+                \toprule
+                \textbf{Function} & \textbf{Description} & \textbf{Priority Level} \\ 
+                \midrule 
+                1 & Download LSTM Data Sets & Medium \\ \hline 
+                2 & Data Mine Tweets & High \\ \hline 
+                3 & Develop \gls{lstm} Neural Network & High \\ \hline 
+                4 & Build a Graph Representation of LSTM Predictions & High \\ \hline  
+                5 & Perform \gls{baf} Analysis & High \\ 
+                \bottomrule
+            \end{tabular}
+            \label{table:coreproductfunc}
+        \end{table}
+        
+        Each function has a priority level attached to it. High priority represents a necessity, a functionality that is expected to be a part of the minimum viable product. Medium priority describes a case where the functionality is not critical, but provides a useful addition to overall performance of the software. Low priority is generally a nice-to-have, focusing on ease of software use, intermittent result saving for additional future analysis or user experience, e.g. informing the user of currently performed actions or steps.
+        
+        \subsubsection{LSTM Data Download Requirements}
+            Requirements for Automating the download of required data either for processing or \gls{lstm} training are described here (\autoref{table:func1spec}.
+            
+            \begin{table}[!htbp]
+                \centering
+                \caption{Function 1 Specifics}
+                \begin{tabular}{|>{\bfseries}c|L|c|}
+                    \toprule
+                    \textbf{Function} & \textbf{Description} & \textbf{Priority Level} \\ 
+                    \midrule 
+                    1.1 & Download GloVe Vector Data & High \\ \hline 
+                    1.2 & Download \gls{snli} Data & Low \\ \hline 
+                    1.3 & Extract/Unzip Downloaded Data & Medium \\
+                    \bottomrule
+                \end{tabular}
+                \label{table:func1spec}
+            \end{table}
+            
+            \gls{glove} data is on high priority because it describes how sentences consisting of words and characters are to be transformed into numerical multidimensional arrays for \gls{lstm} processing. This is required for use with Twitter data and \gls{lstm} training, validation and testing purposes as well.
+            
+            On the other hand, \gls{snli} data is only used for training and testing of \gls{lstm}. Because training of the model is done beforehand, the user would not need to worry about this unless the goal is to train a different \gls{lstm} model (and use it).
+            
+        \subsubsection{Twitter Data Mining Requirements}
+            Specific functional requirements for Data Mining on Twitter are presented here. The \autoref{table:func2spec} lists what is meant by "Data Mining" and what processes it involves.
+            
+            \begin{table}[!h]
+                \centering
+                \caption{Function 2 Specifics}
+                \begin{tabular}{|>{\bfseries}c|L|c|}
+                    \toprule
+                    \textbf{Function} & \textbf{Description} & \textbf{Priority Level} \\ 
+                    \midrule 
+                    2.1 & Input Search Term or Topic to Mine & High \\ \hline 
+                    2.2 & Save Data Mined Tweets into .csv File & Medium \\ \hline 
+                    2.3 & Remove Non-Alphanumerical Characters & High\\ \hline
+                    2.4 & Remove Stop Words & High \\ \hline
+                    2.5 & Lemmatize words & High \\ \hline
+                    2.6 & Remove Duplicate Tweets & High \\ \hline
+                    2.7 & Filter Short Tweets & Low \\ \hline
+                    2.8 & Read Tweets from Saved .csv File & Medium \\
+                    \bottomrule
+                \end{tabular}
+                \label{table:func2spec}
+            \end{table}
+            
+            The requirements here are mostly concerned with cleaning the mined data. This involves removal of non-alphanumerical characters, such as twitter hashtags (\#), links to other websites, mentions of other users (\@), as well as the removal of stop words, duplicate or too short (e.g. single word) tweets, performing lemmatization.
+        
+        \subsubsection{LSTM Development Requirements}
+            \gls{lstm} is the core of this software, because it serves the most important task of accurately predicting argument relations and directions, thus all of its' functional requirements are in high priority.
+            
+            \begin{table}[!htbp]
+                \centering
+                \caption{Function 3 Specifics}
+                \begin{tabular}{|>{\bfseries}c|L|c|}
+                    \toprule
+                    \textbf{Function} & \textbf{Description} & \textbf{Priority Level} \\ 
+                    \midrule
+                    3.1 & Process \gls{glove} Vector Data & High \\ \hline
+                    3.2 & Perform \gls{lstm} Training & High \\ \hline
+                    3.3 & Perform \gls{lstm} Validation & High \\ \hline
+                    3.4 & Perform \gls{lstm} Testing & High \\ \hline
+                    3.5 & Perform \gls{lstm} Prediction on Tweets & High \\ \hline
+                    3.6 & Perform With 75\% Accuracy Or More & High \\ \hline
+                    3.7 & Save Successfully Trained \gls{lstm} Model & High \\ \hline
+                    3.8 & Load Existing Specified \gls{lstm} Model & High \\
+                    \bottomrule
+                \end{tabular}
+                \label{table:func3spec}
+            \end{table}
+        
+        \subsubsection{Graph Network Requirements}
+            The Graph is one of the main ways to represent argument frameworks and analyse them. The requirements are listed in \autoref{table:func4spec}.
+            
+            \begin{table}[!htbp]
+                \centering
+                \caption{Function 4 Specifics}
+                \begin{tabular}{|>{\bfseries}c|L|c|}
+                    \toprule
+                    \textbf{Function} & \textbf{Description} & \textbf{Priority Level} \\ 
+                    \midrule
+                    4.1 & Create a Node for Each Argument Mined & High \\ \hline
+                    4.2 & Create an Edge for Each Argument Relation & High \\ \hline
+                    4.3 & Differentiate Attack and Support Edges & High \\ \hline
+                    4.4 & Save Graph Data into .gexf File & Low \\ \hline
+                    4.5 & Load Graph Data from .gexf File & Low \\ \hline
+                    4.5 & Display Computed Directed Graph & Medium \\
+                    \bottomrule
+                \end{tabular}
+                \label{table:func4spec}
+            \end{table}
+            
+            Each vertex represents an argument, and an edge - relation between those arguments. The resulting graph must be Digraph, with different edges for \textit{attack} and \textit{support} relations.
+        
+        \subsubsection{Argument Framework Analysis Requirements}
+            The requirements for \gls{af} analysis state steps that need to be taken in order to compute the grounded extensions of argument graphs.
+            
+            \begin{table}[!htbp]
+                \centering
+                \caption{Function 5 Specifics}
+                \begin{tabular}{|>{\bfseries}c|L|c|}
+                    \toprule
+                    \textbf{Function} & \textbf{Description} & \textbf{Priority Level} \\ 
+                    \midrule 
+                    5.1 & Compute Conflict Free Arguments & High \\ \hline 
+                    5.2 & Compute Admissible Arguments & High \\ \hline 
+                    5.3 & Compute the Grounded Extension Arguments & High \\ \hline 
+                    5.4 & Print to Console the Grounded Extension & Medium \\
+                    \bottomrule
+                \end{tabular}
+                \label{table:func5spec}
+            \end{table}
+            
+            This part of software is also very important, because argument frameworks are what is used to analyze argumentation in \gls{ai}. Thus, high priority levels for each computational requirement listed in \autoref{table:func5spec} are in line with the goal of the project.
+        
+    \subsection{Operating Environment}
+        This section describes the hardware and system requirements that the software must be able to run on. These requirements are important because not every hardware is going to be able to handle the same amounts of data or in the same amount of time. 
+        
+        \begin{table}[!htbp]
+            \centering
+            \caption{Operating Environment}
+            \begin{tabular}{|>{\bfseries}S|L|S|}
+                \toprule
+                \textbf{Hardware/System} & \textbf{Description} & \textbf{Value} \\ 
+                \midrule
+                \gls{cpu} & Responsible for running applications and performing calculations & Intel i7-7700 \@4.2GHz\\ \hline
+                \gls{ram} & Responsible for storing data that is currently in use by the \gls{cpu} & 16.0GB\\ \hline
+                \gls{gpu} & Draws graphics. \gls{lstm} component of this software is run on this part as well & nVidia 1080Ti GTX \\ \hline
+                \gls{vram} & Same as \gls{ram}, except used by \gls{gpu} & 11.0GB\\ \hline
+                \gls{os} & System that performs communications between software and hardware layers & Windows 10 \\ 
+                \bottomrule
+            \end{tabular}
+            \label{table:operenvironment}
+        \end{table}
+        \FloatBarrier
+        
+        Hardware and system specifications listen in \autoref{table:operenvironment} are in line with the development environment, where the software of this project was programmed to run. The purpose here is to guarantee that when the project is complete and requirements are fulfilled, the software runs without issues on the operating environment that it was developed in the first place. These requirements can be interpreted as being "recommended" to run the software optimally. The minimum hardware requirements are outside of the project's scope and are not discussed.
+        
+        The next chapter discusses decisions with regards to design of the software and possible constraints or dependencies that come with it.

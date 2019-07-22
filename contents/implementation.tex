@@ -1,0 +1,34 @@
+\section{Implementation}
+    \subsection{Mining of Twitter Data} \label{twitterdata}
+        Currently, the implementation of Data Mining comprises of the following steps:
+        \begin{itemize}
+            \item As the program connects to Twitter API, it fetches a single tweet based on specified parameters (topic or hashtag, amount to fetch, etc.).
+            
+            \item The fetched tweet is preprocessed, by removing stop words and performing lemmatization.
+            
+            \item Afterwards, the resulting text is saved into \gls{csv} file format, along with meta data about the tweet (timestamp, like count, etc.) for later use (such as passing it through \gls{lstm} predictions).
+        \end{itemize}
+        
+        The importance to perform an intermediate saving of the data into \gls{csv} file is to alleviate the pressure on \gls{ram}, there is no need to hold all the data in memory at this point.
+        
+    \subsection{Development of Long Short-Term Memory Network} \label{devlstm}
+        The \gls{lstm} was developed utilising the \gls{snli} corpus, which contains 570,152 sentence pairs labelled \textit{entailment}, \textit{neutral}, \textit{contradiction} or --- \autocite{Bowman2015ALA}. The --- pairs were removed from the data set as they indicate a lack of consensus from the annotators. Next, these pairs are split into three separate data sets. The training set consists of 549,367 sentence pairs, while validation and testing sets contain 9,842 and 9,824 respectively. The argument for using \gls{snli} data sets is that the sheer size of it make it feasible to train a neural network.
+        
+        Next, instead of word2vec, the word embeddings trained from \gls{glove} are used \autocite{Pennington2014GloveGV}. This is because \gls{glove} covers more words in the \gls{snli} data set than word2vec. More precisely, while \gls{snli} contains 37K unique tokens, around 4.1K of them cannot be found in \gls{glove}, while 12.1K in word2vec.
+        
+        For training, Adam method is used with hyperparameters $\beta_1$ = 0.9 and $\beta_2$ = 0.999 for optimisation \autocite{Kingma2015AdamAM}. Initial learning rate is set to 0.001 and weight decay equals to 0.95. A three-class classification is performed (entailment, neutral, contradiction). Accuracy is used as an evaluation metric.
+        
+        \textit{Batch size, dimension of hidden states and output vector size parameters will be discussed in July's progress report.}
+        
+        The \gls{lstm} itself is bidirectional. This means that the input is processed in two directions - words used at the beginning of the sentence are used to understand the following words after that, and words that come at the end of the sentence are used to predict what the beginning of the sentence should look like. The advantage of using bidirectional \gls{lstm}s is that they replicate the way humans process sentences and meanings. When reading a sentence, previously read words are required to understand what is being said next, and vice versa.
+        
+        To combat overfitting, L2 Regularization is used to minimize losses and input keep probability is set to 10\%. This means that 10\% of the input is randomly chosen to be remembered that lead to the output, while the rest is discarded. Accuracy is calculated by looking at a number of correct classifications versus actual classifications.
+        
+    \subsection{Evaluation and Comparison of LSTM Performance} \label{evalstm}
+        \textit{Due for July's progress report as still constantly testing different parameters and their combinations.}
+    
+    \subsection{Graph Network Construction} \label{graphnetwork}
+        \textit{Due for July's progress report.}
+    
+    \subsection{Bipolar Argumentation Framework Analysis} \label{bapanalysis}
+        \textit{Due for July's progress report or early August.}
