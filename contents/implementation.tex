@@ -284,16 +284,20 @@
             
         \subsubsection{Saving and Loading of LSTM Model}
             
+            The saving and loading feature is very simple, because it is all handled by the TensorFlow library (see \cref{code:lstmsaveload} below).
+            
             \begin{lstlisting}[language=Python, caption=Saving and Loading Functions, label=code:lstmsaveload]
     def load_model(self, path):
         tf.train.Saver().restore(self.__sess, path)
         
-    def save_model(self, path):
+    def save_model(self, filename):
         saver = tf.train.Saver()
-        saver.save(self.__sess, os.getcwd() + '\\models\\' + save)
+        saver.save(self.__sess, os.getcwd() + '\\models\\' + filename)
             \end{lstlisting}
     
     \subsection{Graph Network Construction} \label{graphnetwork}
+    
+        
         
         \begin{lstlisting}[language=Python, caption=Constructing Directed Graph from Results, label=code:lstmdigraph]
     def run_model_on_twitter(self):
@@ -337,7 +341,7 @@
                            color=relation)
             \end{lstlisting}
             
-            \subsubsection{Saving and Loading Graphs}
+            \subsubsection{Saving and Loading of Graphs}
             
                 \begin{lstlisting}[language=Python, caption=Saving and Loading Argument Frameworks, label=code:afsaveload]
     def save(self):
@@ -353,7 +357,7 @@
                 self.__colors.append(line)
                 \end{lstlisting}
     
-    \subsection{Bipolar Argumentation Framework Analysis} \label{bapanalysis}
+    \subsection{Argumentation Framework Analysis} \label{bapanalysis}
         
         \begin{lstlisting}[language=Python, caption=Conflict Free Arguments, label=code:conflictfree]
     def conflict_free_arguments(self):
@@ -371,9 +375,9 @@
             for subset in all_subsets:
                 if set([str(u), str(v)]).issubset(subset):
                     if (self.__af.has_edge(u, v) 
-                        and self.__af[u][v]['color'] == 'red') 
-                        or (self.__af.has_edge(v, u) 
-                        and self.__af[v][u]['color'] == 'red'):
+                            and self.__af[u][v]['color'] == 'red') 
+                            or (self.__af.has_edge(v, u) 
+                            and self.__af[v][u]['color'] == 'red'):
                         conflict_sets.append(subset)
 
         conflict_free = []
