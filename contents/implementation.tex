@@ -1,34 +1,384 @@
-\section{Implementation}
+\section{Software Implementation - Newly Added}
+    
     \subsection{Mining of Twitter Data} \label{twitterdata}
-        Currently, the implementation of Data Mining comprises of the following steps:
-        \begin{itemize}
-            \item As the program connects to Twitter API, it fetches a single tweet based on specified parameters (topic or hashtag, amount to fetch, etc.).
+        \subsubsection{Connecting to Twitter API}
+            First of all, in order to obtain tweets, a Twitter account needs to be created and applied for a developer status. For the purpose of this project, a personal account was used, which is why secret authentication keys are hidden and should be supplied by the user. At the moment, the secret key is hard coded, but creating an intuitive way for the user to input personal secret authentication keys/tokens should not be a problem in future iterations.
             
-            \item The fetched tweet is preprocessed, by removing stop words and performing lemmatization.
+            \begin{lstlisting}[language=Python, caption=Connecting Twitter API, label=code:twitterapi]
+    class TwitterMining:
+        def __init__(self):
+            self.__auth = tweepy.OAuthHandler(key_secret.consumer_key, 
+                key_secret.consumer_secret)
+            self.__auth.set_access_token(key_secret.access_token, 
+                key_secret.access_token_secret)
+            self.__api = tweepy.API(self.__auth, wait_on_rate_limit=True)
+            \end{lstlisting}
+            \FloatBarrier
             
-            \item Afterwards, the resulting text is saved into \gls{csv} file format, along with meta data about the tweet (timestamp, like count, etc.) for later use (such as passing it through \gls{lstm} predictions).
-        \end{itemize}
-        
-        The importance to perform an intermediate saving of the data into \gls{csv} file is to alleviate the pressure on \gls{ram}, there is no need to hold all the data in memory at this point.
+            Once connected (see \cref{code:twitterapi}), the software is able to interact with Twitter \gls{api} and perform operations.
+            
+            \begin{lstlisting}[language=Python, caption=Starting Data Mining, label=code:twitterstream]
+    def mine_tweets(self, query="Brexit", since="2019-07-20",
+                    lang="en", count=20):
+        with open(self.__tweets_csv_path, mode='w',
+                  encoding='utf-8', newline='') as file:
+            file = csv.writer(file, delimiter='|', quotechar='"',
+                              quoting=csv.QUOTE_MINIMAL)
+            tweet_count = 0
+            for tweet in tweepy.Cursor(self.__api.search, q=query,
+                                       lang=lang, since=since,
+                                       tweet_mode='extended',
+                                       result_type='recent').items(count):
+            \end{lstlisting}
+            \FloatBarrier
+            
+            The main parameters that can be input are the query search term, a date range (the \textit{at most 7 day old tweet rule} applies here), the number of tweets to fetch (parameter \textit{count}), language (English by default) and result type specifies the ordering of tweets (most recent, in this case). Implementation of this is presented in \cref{code:twitterstream}. The next subsection talks about processing tweets and storing them in a \gls{csv} file.
+            
+        \subsubsection{Processing of Tweets}
+            The fetched tweet is preprocessed, by removing stop words and performing lemmatization. Here is the code sample showing how it is implemented.
+            
+            \begin{lstlisting}[language=Python, caption=Cleaning of Data (Part 1), label=code:cleandata1]
+    if tweet.full_text.startswith("RT @"):
+        text = tweet.retweeted_status.full_text
+    else:
+        text = tweet.full_text
+
+    if "http" in text:
+        index = text.index("http")
+        text = text[:0 - (len(text) - index)]
+            \end{lstlisting}
+            \FloatBarrier
+            
+            If a tweet is a retweet, then what twitter does is inserts a "RT \@" string at the start, specifying that it is a retweet and the user name that retweeted it. This information is unnecessary and will only act to confuse the \gls{lstm} prediction model, thus is removed. Also, each tweet is truncated because Twitter adds a short \gls{url} to the end of tweet. To avoid the case where the tweet is cut off mid word, full text field needs to be accessed. This does not solve the problem of there still being a \gls{url} at the end of text, which has to be also removed manually from the string (see \cref{code:cleandata1}).
+            
+            Afterwards, the text is split into words, and each word is treated and assessed individually.
+            
+            \begin{lstlisting}[language=Python, caption=Cleaning of Data (Part 2), label=code:cleandata2]
+    words = text.split(' ')
+    for word in words:
+        if "@" in word:
+            continue
+        if "&" in word:
+            word = "and"
+        word = word.replace("'", "")
+        word = re.sub(r'[^\w]', '', word)
+            \end{lstlisting}
+            \FloatBarrier
+            
+            The second step in data cleaning process involves skipping words that start with "\@" symbol, which indicates a twitter user name. User names tend to be unstructured, containing one or multiple words and possibly numbers, and they do not necessarily have to be in English. Again, to avoid confusion by the prediction model, they are removed from the tweet together with all non-alphanumerical symbols (see \cref{code:cleandata2}).
+            
+            Next, within the same for-loop, the process of removing stop words and performing lemmatization is done (see \cref{code:cleandata3}).
+            
+            \begin{lstlisting}[language=Python, caption=Cleaning of Data (Part 3), label=code:cleandata3]
+    if word not in self.__stop_words:
+        tag = pos_tag([word])
+        word = self.__lem.lemmatize(word, self.__tag_map[tag[0][1]])
+        filtered += word + " "
+            \end{lstlisting}
+            \FloatBarrier
+            
+            If the word does not belong to a library of Natural language Tool Kits' stop words, then the \textit{post\_tag} variable determines the type of word (noun, verb, adverb, etc.) and based on that, lemmatizes it. The fully processed word that passed all of the previously mentioned and current conditions is saved inside the \textit{filtered} variable, which at the end of processing each tweet represents the fully cleaned text of that tweet.
+            
+            Afterwards, the resulting text is saved into \gls{csv} file format, along with meta data about the tweet (timestamp, like count, etc.) for later use (see \cref{code:cleandata4}). The last criteria is that the resulting text has to contain at least 31 characters. The character count is artificially chosen, as it avoids short length tweets, also operating on the assumption that if the original text contained a lot of unnecessary information (\gls{url}s, hashtags (\#), etc.), then after removing all that data the tweet may lose its' original context. 
+            
+            \begin{lstlisting}[language=Python, caption=Cleaning of Data (part 4), label=code:cleandata4]
+    if len(filtered) > 30:
+        filtered = " ".join(filtered.split())
+        file.writerow([tweet_count,
+                       tweet.created_at,
+                       tweet.retweet_count,
+                       tweet.favorite_count,
+                       filtered.lower()])
+    tweet_count = tweet_count + 1
+            \end{lstlisting}
+            \FloatBarrier
+            
+            The importance to perform an intermediate saving of the data into \gls{csv} file is to alleviate the pressure on \gls{ram}, there is no need to hold all data in memory at this point.
+            
+            All of these steps taken are with the goal of making text data a little more structured while trying to preserve its' original meaning. Otherwise, creating a natural language model that can understand the unstructured nature of interactions present in social media requires too much nitpicking, parameter tuning, and carefully selected and annotated training data that does not yet exist to make an \gls{ai} system with human level social intelligence skills.
         
     \subsection{Development of Long Short-Term Memory Network} \label{devlstm}
-        The \gls{lstm} was developed utilising the \gls{snli} corpus, which contains 570,152 sentence pairs labelled \textit{entailment}, \textit{neutral}, \textit{contradiction} or --- \autocite{Bowman2015ALA}. The --- pairs were removed from the data set as they indicate a lack of consensus from the annotators. Next, these pairs are split into three separate data sets. The training set consists of 549,367 sentence pairs, while validation and testing sets contain 9,842 and 9,824 respectively. The argument for using \gls{snli} data sets is that the sheer size of it make it feasible to train a neural network.
+        \subsubsection{Utilising SNLI Corpus}
+            The \gls{lstm} was developed utilising the \gls{snli} corpus, which contains 570,152 sentence pairs labelled \textit{entailment}, \textit{neutral}, \textit{contradiction} or --- \autocite{Bowman2015ALA}. The --- pairs were removed from the data set as they indicate a lack of consensus from the annotators. Next, these pairs are split into three separate data sets. The training set consists of 549,367 sentence pairs, while validation and testing sets contain 9,842 and 9,824 respectively. The argument for using \gls{snli} data sets is that the sheer size of it make it feasible to train a neural network.
+            
+            \begin{lstlisting}[language=Python, caption=Setup of GloVe Data, label=code:glovemap]
+    def setup_word_map(self, file):
+        with open(file, "r", encoding="utf-8") as glove:
+            for line in glove:
+                name, vector = tuple(line.split(" ", 1))
+                self.__glove_word_map[name] = np.fromstring(vector, sep=" ")
+            \end{lstlisting}
+            \FloatBarrier
         
-        Next, instead of word2vec, the word embeddings trained from \gls{glove} are used \autocite{Pennington2014GloveGV}. This is because \gls{glove} covers more words in the \gls{snli} data set than word2vec. More precisely, while \gls{snli} contains 37K unique tokens, around 4.1K of them cannot be found in \gls{glove}, while 12.1K in word2vec.
+            Next, instead of word2vec, the word embeddings trained from \gls{glove} are used \autocite{Pennington2014GloveGV}. This is because \gls{glove} covers more words in the \gls{snli} data set than word2vec. More precisely, while \gls{snli} contains 37K unique tokens, around 4.1K of them cannot be found in \gls{glove}, while 12.1K in word2vec.
+            
+            Basically, what this does is maps each word to a series of numbers, as can be seen here in \cref{code:glovemap} code.
+            
+            \begin{lstlisting}[language=Python, caption=Processing SNLI Data Set, label=code:processsnli]
+    def update_data_scores(self, file):
+        with open(file, "r") as data:
+            train = csv.DictReader(data, delimiter='\t')
+            evi_sentences = []
+            hyp_sentences = []
+            scores = []
+            for row in train:
+                hyp_sentences.append(np.vstack(
+                    self.sentence2sequence(row["sentence1"].lower())[0]))
+                evi_sentences.append(np.vstack(
+                    self.sentence2sequence(row["sentence2"].lower())[0]))
+                scores.append(self.score_setup(row))
+        hyp_sentences = np.stack([self.fit_to_size(x, 
+                            (self.__hypothesis_length, self.__vector_size))
+                             for x in hyp_sentences])
+        evi_sentences = np.stack([self.fit_to_size(x, 
+                            (self.__evidence_length, self.__vector_size))
+                             for x in evi_sentences])
+        return (hyp_sentences, evi_sentences), np.array(scores)
+            \end{lstlisting}
+            \FloatBarrier
+            
+            In \cref{code:processsnli} code sample, the algorithm reads through the training set, and from each line extracts hypothesis and evidence sentences, along with its' classification scores. The sentences are transformed into sequences of numbers, by looking at \gls{glove} data for each word in a sentence. As for the scores, they are assigned a value based on annotator's verdict specified inside the \gls{snli} text file (see \cref{code:scoresetup}). At the end, the resulting matrices need to be resized so that they are of set equal length and can be evaluated and compared properly.
+            
+            \begin{lstlisting}[language=Python, caption=Classification Score Setup, label=code:scoresetup]
+    @staticmethod
+    def score_setup(row):
+        convert_dict = {
+            'entailment': 0,
+            'neutral': 1,
+            'contradiction': 2
+        }
+        score = np.zeros((3,))
+        for x in range(1, 6):
+            tag = row["label" + str(x)]
+            if tag in convert_dict:
+                score[convert_dict[tag]] += 1
+        return score / (1.0 * np.sum(score))
+            \end{lstlisting}
+            \FloatBarrier
+            
+        \subsubsection{LSTM Initialisation and Setup}
+            
+            The way that TensorFlow initialises its' models is via the use of placeholders. The placeholder acts as a variable that can be changed while the model is running and it can be given a default value. This is useful, because the model can update its' inner parameters midway through training process and tune them to better performance results.
+            
+            \begin{lstlisting}[language=Python, caption=Placeholders for Sentences and Results, label=code:placeholder1]
+    self.__hyp = tf.placeholder(tf.float32, 
+                [self.__batch_size, self.__max_hypothesis_length, 
+                self.__vector_size], 'hypothesis')
+    self.__evi = tf.placeholder(tf.float32, 
+                [self.__batch_size, self.__max_evidence_length, 
+                self.__vector_size], 'evidence')
+    self.__labels = tf.placeholder(tf.float32, 
+                [self.__batch_size, self.__n_classes], 'label')
+            \end{lstlisting}
+            \FloatBarrier
+            
+            The hypothesis, evidence sentences and correct results (from \gls{snli} data) placeholders are created (see \cref{code:placeholder1}). Then, the actual forward and backward \gls{lstm} cells are initialised, as shown here:
+            
+            \begin{lstlisting}[language=Python, caption=Initialisation of LSTM, label=code:placeholder2]
+    self.__input_keep = tf.placeholder_with_default(1.0, shape=())
+    self.__output_keep = tf.placeholder_with_default(1.0, shape=())
+    self.__state_keep = tf.placeholder_with_default(1.0, shape=())
+
+    self.__lstm_back = tf.keras.layers.LSTMCell(self.__hidden_size)
+    self.__lstm_drop_back = tf.contrib.rnn.DropoutWrapper(
+                    self.__lstm_back,
+                    input_keep_prob=self.__input_keep,
+                    output_keep_prob=self.__output_keep,
+                    state_keep_prob=self.__state_keep)
+    self.__lstm = tf.keras.layers.LSTMCell(self.__hidden_size)
+    self._lstm_drop = tf.contrib.rnn.DropoutWrapper(
+                    self.__lstm,
+                    input_keep_prob=self.__input_keep,
+                    output_keep_prob=self.__output_keep,
+                    state_keep_prob=self.__state_keep)
+            \end{lstlisting}
+            \FloatBarrier
+            
+            The input, output and state keep represent percentages that show how many values are kept after processing. The default is that all values are kept, as in, all of the matrix values map to current state and to predicted output (result) of that input. Later, when the actual training is being done, the input keep probability value 0.1 is fed, mainly to combat scenarios where small difference between two similar yet different words decide the outcome of a textual entailment (e.g. words \textit{is} and \textit{are} could be seen as different, thus falsely label the result as \textit{contradiction}).
+            
+            Then, the actual \gls{lstm} cells are created, one for forward processing and one for backward. This combination makes the whole model bidirectional. Additionally, both cells get a dropout wrapper applied, with input, output and state variables applied as per their description in previous paragraph.
+            
+        \subsubsection{LSTM Training}
+            
+            For training, Adam method is used with hyperparameters $\beta_1$ = 0.9 and $\beta_2$ = 0.999 for optimisation. Alternatively, Gradient Descent Optimiser is a popular alternative, but it has been shown that Adam is capable of outperforming it \autocite{Kingma2015AdamAM}. Initial learning rate is set to 0.001 and weight decay equals to 0.95 (see \cref{code:placeholder3}). A three-class classification is performed (entailment, neutral, contradiction) and L2 Regularization is used to minimize losses. Accuracy is used as an evaluation metric, and is discussed in detail in the next chapter.
+            
+            \begin{lstlisting}[language=Python, caption=LSTM Training Parameters, label=code:placeholder3]
+    self.__n_classes = 3
+    self.__weight_decay = 0.95
+    self.__learning_rate = 0.001
+    self.__fc_bias = tf.get_variable('bias', [self.__n_classes])
+    tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, 
+                         tf.nn.l2_loss(self.__fc_weight))
+    self.__rnn_outputs = tf.contrib.rnn.static_bidirectional_rnn(
+                         self.__lstm, self.__lstm_back,
+                         self.__input, dtype=tf.float32)
+    self.__classification_scores = tf.matmul(self.__rnn_outputs[-1], 
+                         self.__fc_weight) + self.__fc_bias
+    self.__optimizer = tf.train.AdamOptimizer(self.__learning_rate)
+                         .minimize(self.__total_loss)
+            \end{lstlisting}
+            \FloatBarrier
         
-        For training, Adam method is used with hyperparameters $\beta_1$ = 0.9 and $\beta_2$ = 0.999 for optimisation \autocite{Kingma2015AdamAM}. Initial learning rate is set to 0.001 and weight decay equals to 0.95. A three-class classification is performed (entailment, neutral, contradiction). Accuracy is used as an evaluation metric.
+            The \gls{lstm} itself is bidirectional. This means that the input is processed in two directions - words used at the beginning of the sentence are used to understand the following words after that, and words that come at the end of the sentence are used to predict what the beginning of the sentence should look like. The advantage of using bidirectional \gls{lstm}s is that they replicate the way humans process sentences and meanings. When reading a sentence, previously read words are required to understand what is being said next, and vice versa.
+            
+            \begin{lstlisting}[language=Python, caption=LSTM Training Algorithm, label=code:lstmtraining]
+    with tf.device("/device:GPU:0"):
+        for i in training_iterations:
+            batch = np.random.randint(df_list[0].shape[0], 
+                                    size=self.__batch_size)
+            hyps = df_list[0][batch, :]
+            evis = df_list[1][batch, :]
+            labels = c_scores[batch]
+
+            self.__sess.run([self.__optimizer], 
+                            feed_dict={self.__hyp: hyps,
+                                       self.__evi: evis,
+                                       self.__labels: labels,
+                                       self.__input_keep: 0.1})
+            \end{lstlisting}
+            \FloatBarrier
         
-        \textit{Batch size, dimension of hidden states and output vector size parameters will be discussed in July's progress report.}
+            The training is carried out by the \gls{gpu} component, due to its' superior multiprocessing capabilities that make the overall training process a lot faster and efficient. For a specified number of training iterations, the algorithm selects sentence pairs randomly from the data feature list, and their correct classification scores accordingly.
+            
+            Afterwards, the learning rate optimiser is fed to the model, along with selected hypothesis, evidence sentence pairs, their correct labelling, and input keep probability of 10\%.
+            
+        \subsubsection{Algorithm for Sentence Pair LSTM Prediction}
+            
+            Once the \gls{lstm} model is trained, the previously data mined and cleaned Twitter tweets can be used for textual entailment prediction. But before they can be input into the model, same as the training data sets, they have to be transformed from character sequences into multidimensional arrays of numbers.
+            
+            \begin{lstlisting}[language=Python, caption=Transforming Sentences into Sequences, label=code:lstmrunning1]
+    def run_predict(self, s1, s2):
+        e_stack = np.vstack(self.__preproc.sentence2sequence(s1)[0])
+        e_tuple = (self.__preproc.get_evidence_length(),
+                   self.__preproc.get_vector_size())
+        evi_sentence = [self.__preproc.fit_to_size(e_stack, e_tuple)]
+
+        h_stack = np.vstack(self.__preproc.sentence2sequence(s2)[0])
+        h_tuple = (self.__preproc.get_hypothesis_length(),
+                   self.__preproc.get_vector_size())
+        hyp_sentence = [self.__preproc.fit_to_size(h_stack, h_tuple)]
+
+        result = self.__lstm.run_prediction(evi_sentence, hyp_sentence)
+        return result
+            \end{lstlisting}
+            \FloatBarrier
+            
+            Once that is done, the tweets can be passed into the function that does the actual prediction (see \cref{code:lstmrunning1}). The hyperparameters of the model remain the same that were used since the last time the model was trained. The code for this method is shown below:
+            
+            \begin{lstlisting}[language=Python, caption=Running LSTM Prediction, label=code:lstmrunning2]
+    def run_prediction(self, evi_sentence, hyp_sentence):
+        hyp = (hyp_sentence * self.__batch_size)
+        evi = (evi_sentence * self.__batch_size)
+        label = [[0, 0, 0]] * self.__batch_size
+        with tf.device("/device:GPU:0"):
+            prediction = self.__sess.run(self.__classification_scores,
+                                    feed_dict={self.__hyp: hyp,
+                                               self.__evi: evi,
+                                               self.__labels: label})
+
+        return ["E", "N", "C"][np.argmax(prediction[0])]
+            \end{lstlisting}
+            \FloatBarrier
+            
+            The result is a single character, \textit{E} meaning \textit{Entailment}, \textit{N} - \textit{Neutral} and \textit{C} - \textit{Contradiction}.
+            
+        \subsubsection{Saving and Loading of LSTM Model}
+            
+            \begin{lstlisting}[language=Python, caption=Saving and Loading Functions, label=code:lstmsaveload]
+    def load_model(self, path):
+        tf.train.Saver().restore(self.__sess, path)
         
-        The \gls{lstm} itself is bidirectional. This means that the input is processed in two directions - words used at the beginning of the sentence are used to understand the following words after that, and words that come at the end of the sentence are used to predict what the beginning of the sentence should look like. The advantage of using bidirectional \gls{lstm}s is that they replicate the way humans process sentences and meanings. When reading a sentence, previously read words are required to understand what is being said next, and vice versa.
-        
-        To combat overfitting, L2 Regularization is used to minimize losses and input keep probability is set to 10\%. This means that 10\% of the input is randomly chosen to be remembered that lead to the output, while the rest is discarded. Accuracy is calculated by looking at a number of correct classifications versus actual classifications.
-        
-    \subsection{Evaluation and Comparison of LSTM Performance} \label{evalstm}
-        \textit{Due for July's progress report as still constantly testing different parameters and their combinations.}
+    def save_model(self, path):
+        saver = tf.train.Saver()
+        saver.save(self.__sess, os.getcwd() + '\\models\\' + save)
+            \end{lstlisting}
     
     \subsection{Graph Network Construction} \label{graphnetwork}
-        \textit{Due for July's progress report.}
+        
+        \begin{lstlisting}[language=Python, caption=Constructing Directed Graph from Results, label=code:lstmdigraph]
+    def run_model_on_twitter(self):
+        relation_count = 0
+        with open(self.__lstm_results_csv, 
+                  mode="w", 
+                  encoding="UTF-8", 
+                  newline='') as file:
+            file = csv.writer(file, 
+                              delimiter='|', 
+                              quotechar='"', 
+                              quoting=csv.QUOTE_MINIMAL)
+            for i in range(len(self.__sentences) - 1, 0, -1):
+                for j in range(i - 1, 0, -1):
+                    res = self.__rte.run_predict(self.__sentences[j], 
+                                                 self.__sentences[i])
+                    if res == "E" or res == "C":
+                        relation_count = relation_count + 1
+                        self.__af.add_argument(self.__sentences[j])
+                        self.__af.add_argument(self.__sentences[i])
+                        self.__af.add_relation(self.__sentences[j], 
+                                               self.__sentences[i],
+                                               'red' if res in ["C"] 
+                                                     else 'green')
+                        file.writerow([j, res, i, self.__sentences[j],
+                                       self.__sentences[i]])
+            \end{lstlisting}
+            
+            ...
+            
+            \begin{lstlisting}[language=Python, caption=Adding Arguments and Relations, label=code:addargrelation]
+    def add_argument(self, arg):
+        if arg not in self.__arguments:
+            self.__af.add_node(self.__size + 1, sentence=arg)
+            self.__size = self.__size + 1
+            self.__arguments[arg] = self.__size
+        return self.__size
+
+    def add_relation(self, u, v, relation):
+        self.__af.add_edge(self.__arguments[u], self.__arguments[v], 
+                           color=relation)
+            \end{lstlisting}
+            
+            \subsubsection{Saving and Loading Graphs}
+            
+                \begin{lstlisting}[language=Python, caption=Saving and Loading Argument Frameworks, label=code:afsaveload]
+    def save(self):
+        with open(GRAPH_DATA_PATH, mode="w") as file:
+            for u, v in self.__af.edges():
+                file.write(self.__af[u][v]['color'] + "\n")
+        nx.write_gexf(self.__af, GRAPH_DATA_PATH)
+
+    def load(self):
+        self.__af = nx.read_gexf(GRAPH_DATA_PATH)
+        with open(GRAPH_COLORS_PATH, mode="r") as file:
+            for line in file:
+                self.__colors.append(line)
+                \end{lstlisting}
     
     \subsection{Bipolar Argumentation Framework Analysis} \label{bapanalysis}
-        \textit{Due for July's progress report or early August.}
+        
+        \begin{lstlisting}[language=Python, caption=Conflict Free Arguments, label=code:conflictfree]
+    def conflict_free_arguments(self):
+        arguments = []
+        for node in self.__af.nodes():
+            arguments.append(str(node))
+
+        all_subsets = []
+        for L in range(1, len(arguments) + 1):
+            for subset in itertools.combinations(arguments, L):
+                all_subsets.append(subset)
+
+        conflict_sets = []
+        for u, v in self.__af.edges():
+            for subset in all_subsets:
+                if set([str(u), str(v)]).issubset(subset):
+                    if (self.__af.has_edge(u, v) 
+                        and self.__af[u][v]['color'] == 'red') 
+                        or (self.__af.has_edge(v, u) 
+                        and self.__af[v][u]['color'] == 'red'):
+                        conflict_sets.append(subset)
+
+        conflict_free = []
+        for subset in all_subsets:
+            if subset not in conflict_sets:
+                conflict_free.append(subset)
+            \end{lstlisting}
+        

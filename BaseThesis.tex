@@ -9,7 +9,7 @@
 \emailaddress{danielius.marciukovas@kcl.ac.uk}
 \programme{MSc Web Intelligence}
 \supervisor{Josh Murphy}
-\wordcount{7884}
+\wordcount{10103}
 
 \makenomenclature
 \makeglossaries
@@ -27,11 +27,8 @@
     \fancyhead{}
     \fancyfoot{}
     \pagestyle{fancy} 
-    \fancyhead[R,L]{\sffamily\small \thepage}
-    \fancyhead[LO]{\sffamily\small \nouppercase{\rightmark}}
-    
-    % \fancyhead[RO,L]{\sffamily\small \thepage}
-    % \fancyhead[LO,RE]{\sffamily\small \nouppercase{\rightmark}}
+    \fancyhead[R,L]{\sffamily\small \thepage} % RO, L
+    \fancyhead[LO]{\sffamily\small \nouppercase{\rightmark}} % LO, RE
     \renewcommand{\headrulewidth}{0.4pt}
     \renewcommand{\footrulewidth}{0.0pt}
     
@@ -46,7 +43,6 @@
     \include{contents/evaluation}
     \include{contents/conclusion}
     
-    %%%%% References
     % \nocite{*}
     \printbibliography
     \include{structure/declaration}

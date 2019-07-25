@@ -50,8 +50,14 @@
 \RequirePackage{enumitem}
 \RequirePackage[intoc]{nomencl}
 \RequirePackage[toc, acronym]{glossaries}
+\RequirePackage{color}
+\RequirePackage{xcolor}
+\RequirePackage{listings}
 
 \usetikzlibrary{arrows}
+
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{9}
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{9}
 
 % Cover Page
 \RequirePackage{graphicx}
@@ -109,6 +115,59 @@
 \numberwithin{equation}{section}
 \def\blue#1{\textcolor{blue}{#1}}
 \def\red#1{\textcolor{red}{#1}}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codepurple},
+    keywordstyle=\color{deepblue},
+    otherkeywords={self},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    emph={__init__,True,False,@staticmethod},
+    emphstyle=\color{deepred},
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=tb
+}
+
+\lstset{style=pythonstyle}
+\crefname{lstlisting}{Listing}{Listings}
+
+% Python style for highlighting
+% \newcommand\pythonstyle{\lstset{
+% language=Python,
+% basicstyle=\ttm,
+% otherkeywords={self,if,is},             % Add keywords here
+% keywordstyle=\ttb\color{deepblue},
+% emph={__init__,True,False},          % Custom highlighting
+% emphstyle=\ttb\color{deepred},    % Custom highlighting style
+% stringstyle=\color{deepgreen},
+% frame=tb,                         % Any extra options here
+% showstringspaces=false            % 
+% }}
+% Python environment
+% \lstnewenvironment{python}[1][]{\pythonstyle\lstset{#1}}{}
+% Python for external files
+% \newcommand\pythonexternal[2][]{{\pythonstyle\lstinputlisting[#1]{#2}}}
+% % Python for inline
+% \newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
 
 % New Comment for todo notes
 \newcommand{\insertref}[1]{\todo[color=green!40]{RefMissing: #1}}
