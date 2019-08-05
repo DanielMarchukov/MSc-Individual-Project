@@ -128,7 +128,7 @@
     backgroundcolor=\color{backcolour},   
     commentstyle=\color{codepurple},
     keywordstyle=\color{deepblue},
-    otherkeywords={self},
+    otherkeywords={self,with},
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{codegreen},
     basicstyle=\ttfamily\footnotesize,

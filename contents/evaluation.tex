@@ -1,1 +1,56 @@
-\section{Evaluation and Analysis of Results}
+\section{Evaluation and Testing}
+    
+    
+    
+    \subsection{Twitter Data Mining Evaluation}
+        
+        ...
+        
+    \subsection{LSTM Performance Evaluation}
+        
+        The main parameters for evaluating \gls{lstm} performance is accuracy and loss. Accuracy is a percentage value that shows how many samples the model predicted correctly compared to how many there are total. Loss, on the other hand, is not a percentage. It is a summation of the errors made for each example in training, validation and testing sets.
+        
+        \begin{lstlisting}[language=Python, caption=Accuracy Calculation, label=code:accuracy]
+    with tf.variable_scope('Accuracy'):
+        predicts = tf.cast(tf.argmax(self.__classification_scores, 1), 
+                           'int32')
+        y_label = tf.cast(tf.argmax(self.__labels, 1), 'int32')
+        corrects = tf.equal(predicts, y_label)
+        num_corrects = tf.reduce_sum(tf.cast(corrects, tf.float32))
+        self.__accuracy = tf.reduce_mean(tf.cast(corrects, tf.float32))
+        \end{lstlisting}
+        
+        The code for evaluating accuracy is presented above (see \cref{code:accuracy}).
+        
+        \begin{lstlisting}[language=Python, caption=Loss Calculation, label=code:loss]
+    with tf.variable_scope("loss"):
+        cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(
+              logits=self.__classification_scores, labels=self.__labels)
+        self.__loss = tf.reduce_mean(cross_entropy)
+        self.__total_loss = self.__loss + self.__weight_decay * 
+              tf.add_n(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
+        \end{lstlisting}
+        
+        Both Loss and Accuracy calculations involve dynamic variables that are adjusted as needed while the model learns and tries to maximise accuracy and reduce losses. After set amount of steps, the system prints on screen current accuracy and loss values, showing in which direction it is adapting, and whether the values are satisfactory at any given step (see \cref{code:print1}).
+        
+        \begin{lstlisting}[language=Python, caption=Accuracy and Loss Reporting, label=code:print1]
+    acc = self.__sess.run(self.__accuracy, feed_dict={self.__hyp: hyps,
+                                                    self.__evi: evis,
+                                                    self.__labels: labels,
+                                                    self.__input_keep: 0.1})
+    tmp_loss = self.__sess.run(self.__loss, feed_dict={self.__hyp: hyps,
+                                                    self.__evi: evis,
+                                                    self.__labels: labels,
+                                                    self.__input_keep: 0.1})
+    print("Iter " + str(i / self.__batch_size) + 
+          ", Minibatch Loss = " + "{:.5f}".format(tmp_loss) +
+          ", Training Accuracy = " + "{:.5f}".format(acc))
+        \end{lstlisting}
+        
+        This process is performed during training, validation and testing cycles. Additionally, at the end of each stage (e.g. training), the overall average accuracy and loss values are calculated and printed to the user (code is not shown here in \cref{code:print1}).
+        
+        If the model results are satisfactory, the model is saved for future use as per software implementation details in previous chapter.
+        
+    \subsection{Argumentation Framework Evaluation}
+    
+        ...

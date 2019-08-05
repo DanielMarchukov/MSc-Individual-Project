@@ -1,9 +1,12 @@
-\section{Software Design - Newly Added}
+\section{Software Design}
     In this section, overall design of the project is discussed, presenting arguments for various choices made and the outcomes of such choices. Existing and possible dependencies, constraints or limitations are mentioned here.
     
     The \cref{techstack} presents various technologies chosen to develop the software and fulfil the requirements specified in previous chapters.
     
     The \cref{assumptionsdependencies} discusses how current design impacts the software's dependencies, installation and running process, and existing constraints.
+    
+    \subsection{Project's Architecture} \label{architecture}
+        \textit{UML diagrams here...}
     
     \subsection{Technology Stack} \label{techstack}
         Technological choices are presented and explained here in detail. Alternatives are also discussed and argued for and against. This section covers the discussions of Programming Languages, Dependency and Package Managers, and Programming Libraries.
@@ -23,6 +26,9 @@
             
         \subsubsection{Deep Neural Network Development Library Framework}
             The most popular library that delivers upon the objectives of the project is TensorFlow, and as such it is used in this project. It's popularity speaks volumes as there is a vast amount of guides easily accessible and extendable into solving complex problems (such as Recognizing Textual Entailment, for example). Also, the documentation is full with up to date details and examples clearly explaining differences between previous and future (yet to be released) versions. Another popular library is PyTorch, it also features a lot of functions that can perform the same tasks as TensorFlow. Difference being that PyTorch is a newer framework, naturally meaning smaller community and lesser flexibility (at least until it has fully caught up to existing TensorFlow framework), but it is offering new ways of doing things (in some functions) which may prove useful in some cases. The verdict is that currently, TensorFlow offers higher control of parameter tuning for the purpose of training and developing \gls{lstm} networks.
+            
+        \subsubsection{Argumentation Framework Construction Library}
+            To draw the graph network and be able to properly analyse it, a special library is required. One such library is NetworkX, which is mainly used to analyse networks in the traditional sense, providing different implementations of popular analysis algorithms, such as topological sort, breadth and depth first searches, Dijkstra's algorithm and so on. This library is not a new one and has existed for a while, which also makes this a positive as a lot of information is available online on different forums and discussion boards. Since argumentation frameworks are essentially network graphs (both are represented with vertices and directional edges between them), this library is a perfect choice for the matter. In Python world, there are not many alternatives. Most other graph network libraries that are popular are coded for C/C++ environments, because research and analysis of networks is computationally challenging task and the performance management that C/C++ provide is beneficial. Unfortunately, this project cannot make use of those benefits because it is developed in Python, for main reason being that it is more focused towards the Machine Learning/Artificial Intelligence side of things than pure graph research.
         
     \subsection{Assumptions, Dependencies and Constraints} \label{assumptionsdependencies}
         This section explains the technical dependencies required to run the project in its' current state.
@@ -32,9 +38,7 @@
         While this is an inconvenience for people who are not technically literate, the intended audience for the project are users that are comfortable with reading python code and can customise it to suit their research needs. This includes training different models, tuning parameters and adding new argumentation framework analysis avenues via open source contribution.
         
         All of this could have been done the other way around, constructing a single analysis model and specific criteria using which the argument framework is evaluated. While this would undoubtedly make the program more user friendly and possibly even a marketable product, that is not the intended result of the project. One of project aims listed previously is contributing to artificial intelligence research community, and the best way this can be done is via open source code providing a starting point and hopefully bring about necessary breakthrough that advances this specific subfield of argument mining and analysis.
-        
-    % \subsection{Design and Implementation Constraints} \label{designconstraints}
-    %     \subsubsection{User Interface}
+
         Everything in the project is controlled via command line interface. This means that running the software and user getting informed of different stages that software enters, including results, is presented in text format. A proper graphical interface is to be considered in future, as user experience is not the focus of the project currently.
         
         Additionally, the Twitter \gls{api} has some limitations of its' own. First of all, the data is handicapped to a specific rate that the user can access the \gls{api} in a short amount of time. Twitter does this to shield itself from abuse and potential \gls{ddos} attacks. Secondly, the only data that is accessible via Twitter \gls{api} is not older than 7 days and has to be at least 1 hour old. The main complication here is that if the user wants to analyse a topic that was hotly debated and argued previously (as in, older than 7 days), this poses a problem. The only solution is to monitor current affairs on Twitter and data mine tweets in advance, or as things are happening, and save them for later use or analysis.
