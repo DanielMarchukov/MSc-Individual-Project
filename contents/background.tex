@@ -1,5 +1,7 @@
-\section{Technical Background} 
-    \subsection{Abstract Argumentation Framework}
+\section{Technical Background} \label{techbackground}
+    In this chapter, technical background is covered to equip the reader with the necessary knowledge for the next following sections. First of all, abstract and bipolar argumentation frameworks are presented in \cref{aaf} and \cref{baf} respectively. Afterwards, an introduction to Long Short Term Memories is given in \cref{lstm}, although in a much less technical language than the previous two subsections.
+
+    \subsection{Abstract Argumentation Framework} \label{aaf}
         The \textit{argumentation framework} described here is based on \autocite{Dung1995OnTA}. Dung's \gls{af} considers the arguments to be abstract entities without paying any consideration to their internal structure. The way that argument's role is computed is by looking how it relates to other arguments within the argument set.
         
         \begin{definition}
@@ -25,9 +27,11 @@
         
         The above dialogue example can be represented as an \textit{abstract argumentation framework} $\langle S, \text{ }R \rangle$ where $S = \{a, b, c\}$ and $R = \{(a, b), (b, a), (c, b)\}$, as shown in \autoref{fig:aaf1example} below:
         \input{figures/aaf1example}
+        \FloatBarrier
         
         \gls{af} uses semantics to analyse what sets of nodes (\textit{arguments}) can be reasonably accepted given their \textit{attack relation}. Specifically, for the scope of this work, extension-based semantics are explored. An extension is a set of arguments that are jointly acceptable under special circumstances/properties. An acceptable set of arguments is shown in \autoref{fig:aaf1examplecolorized}, following the \cref{exa:example1}.
         \input{figures/aaf1examplecolorized}
+        \FloatBarrier
         
         \subsubsection{Main Concepts}
             Before introducing different extensions, some concepts have to be defined first.
@@ -123,7 +127,7 @@
             
             The main difference in grounded and preferred extensions is the strictness on which arguments to include. The grounded extension provides a minimum amount of arguments that can be deducted as the overall result, while the preferred extensions tries to include as much as possible, thus including arguments in the results that might be a bit loose in terms of argumentative grounding.
         
-    \subsection{Bipolar Argumentation Framework}
+    \subsection{Bipolar Argumentation Framework} \label{baf}
         The limitation with \gls{aaf}s is that only conflicting relations are captured. The framework has difficulties capturing \textit{support} arguments, that is, when one argument is in agreement of the other. \gls{baf} aims at extending upon the concepts presented by Dung's framework \autocite{Dung1995OnTA}. In \autocite{Cayrol2005OnTA}, the author introduces another dimension through which argument relations can be captured and incorporates it into \gls{aaf}. 
         
         In terms of the framework (graph) itself, nodes still represent the \textit{arguments}, and solid arrows represent \textit{attacks}. \textit{Support} relation is also represented as an arrow, indicating that argument $a$ supports argument $b$. There are no strict requirements for how the arrows have to be drawn within the framework, so in this project a dotted arrow will be used to indicate \textit{support} (see \autoref{fig:baf1example}).
@@ -208,34 +212,8 @@
                 \label{exa:example14}
             \end{exa}
             
-            % SAFE DEFINITION
-            % \begin{definition}
-            %     Take $T \subseteq S$. A \textit{safe} set is a set of arguments $T$ if and only if $\nexists B \in S$ such that $T$ \textit{set-attacks} $A$ and either $A \in T$ or $T$ \textit{set-supports} $A$.
-            %     \label{definition:definition17}
-            % \end{definition}
-            % \begin{exa}
-            %     From \autoref{fig:baf1example} it can be seen that the sets with arguments $\{a, c\}$ and $\{d, i\}$ are not \textbf{safe}. On the other hand, $\{b, c, f\}$ is \textbf{safe}.
-            %     \label{exa:example15}
-            % \end{exa}
-            
-            % CLOSED DEFINITION
-            % \begin{definition}
-            %     Take $T \subseteq S$ and $A$, $B \in S$. A \textit{closed} set for $R_{sup}$ is a set of arguments $T$ if and only if $A \in T$ such that $A R_{sup} B$, then the set $T$ also $B \in T$.
-            %     \label{definition:definition18}
-            % \end{definition}
-            % \begin{exa}
-            %     From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, f, e\}$ is \textbf{closed}.
-            %     \label{exa:example16}
-            % \end{exa}
-            
         \subsubsection{Semantic Extensions}
             The author of \autocite{Cayrol2005OnTA} proposed new semantic extensions that build up from the concepts in \autocite{Dung1995OnTA} and expand upon the acceptability of arguments within the \gls{baf}. Same as in previous section, they are briefly presented here.
-            
-            % STABLE EXTENSION
-            % \begin{definition}
-            %     Take $T \subseteq S$. A \textit{stable extension} is a set of arguments $T$ if and only if $T$ is \textit{conflict-free} and $\forall A \notin T$, $T$ \textit{set-attacks} $A$.
-            %     \label{definition:definition19}
-            % \end{definition}
             
             \begin{definition}
                 Take $T \subseteq S$. A \textit{d-admissible} set is a set of arguments $T$ if and only if $T$ is \textit{conflict-free} and \textit{set-defends} all arguments in $T$.
@@ -243,17 +221,6 @@
             \end{definition}
             
             An equivalent in \gls{aaf} would be the complete extension, ensuring that only non-contradicting arguments are included and additionally those that are defended.
-            
-            % SAFE AND CLOSED ADMISSIBLE
-            % \begin{definition}
-            %     Take $T \subseteq S$. A \textit{s-admissible} set is a set of arguments $T$ if and only if $T$ is \textit{safe} and \textit{set-defends} all arguments in $T$.
-            %     \label{definition:definition21}
-            % \end{definition}
-            
-            % \begin{definition}
-            %     Take $T \subseteq S$. A \textit{c-admissible} set is a set of arguments $T$ if and only if is \textit{conflict-free}, \textit{closed} for $R_{sup}$ and \textit{set-defends} all arguments in $T$.
-            %     \label{definition:definition22}
-            % \end{definition}
             
             \begin{definition}
                 Take $T \subseteq S$. A \textit{d-grounded extension} is a set of arguments $T$ if and only if $T$ is minimal with respect to \textit{d-admissible} subsets of $S$. 
@@ -266,44 +233,34 @@
             \end{definition}
             
             The two definitions above correspond to grounded and preferred extensions in \gls{aaf} respectively.
-            % \begin{exa}
-            %     From \autoref{fig:baf1example} it can be seen that the set with arguments $\{b, c, e, i\}$ is \textbf{s-admissible} and not \textbf{c-admissible}. Also, the set of arguments $\{b, c, e, i, f, h, k\}$ is a \textbf{c-preferred extension}.
-            %     \label{exa:example17}
-            % \end{exa}
             
             In conclusion, the concepts, definitions and examples provided in the technical background section should sufficiently cover the theoretical knowledge required to understand the project. The next section dives into implementation details of the topic.
-            
-    \subsection{Recurrent Neural Networks}
-        \gls{rnn} is a class of artificial neural networks where connections between nodes form a directed graph along a temporal sequence. The main feature of \gls{rnn}s is that when it receives an input, it looks not only at an input but also remembers what was fed to it in the past. Basic feed forward networks \textit{remember} things too, but they remember things they learnt during training. For example, an image classifier learns what a “1” looks like during training and then uses that knowledge to classify things in production.
-
-        While \gls{rnn} learns similarly while training, in addition, it remembers things learnt from prior input(s) while generating output(s). \gls{rnn}s can take one or more input vectors and produce one or more output vectors and the output(s) are influenced not just by weights applied on inputs like a regular neural network, but also by a hidden state vector representing the context based on prior input(s)/output(s). So, the same input could produce a different output depending on previous inputs in the series.
-        
-        In summary, in a vanilla neural network, a fixed size input vector is transformed into a fixed size output vector. Such a network becomes \textit{recurrent} when you repeatedly apply the transformations to a series of given input and produce a series of output vectors. There is no pre-set limitation to the size of the vector. And, in addition to generating the output which is a function of the input and hidden state, it updates the hidden sate itself based on the input and use it in processing the next input.
-        
-        % \subsubsection{Bidirectional RNNs}
-        %     Sometimes it is not just about learning from the past to predict the future, but it is also needed to look into the future to fix the past. In speech recognition and handwriting recognition tasks, where there could be considerable ambiguity given just one part of the input, it is often needed to know what is coming next to better understand the context and detect the present.
     
-    \subsection{Long Short-Term Memory}
-        \gls{lstm} is a special kind of RNN, capable of learning long-term dependencies, introduced by \autocite{Hochreiter1997LongSM}. \gls{lstm}s are explicitly designed to avoid the long-term dependency problem or vanishing gradient problem. Remembering information for long periods of time is practically their default behaviour. All recurrent neural networks have the form of a chain of repeating modules of neural network. In standard \gls{rnn}s, this repeating module will have a very simple structure, such as a single tanh layer.
+    \subsection{Long Short-Term Memory} \label{lstm}
+        This subsection is presented in a non-technical language because the different specifics of \gls{lstm} are not delved into during the project's design and implementation decisions. The core underlying processes of \gls{lstm} that are presented here are dealt with by the help of a library called TensorFlow (also presented in later chapters). Because of that, only a brief high level overview is given to equip the reader the necessary knowledge to know what \gls{lstm}s are, excluding complicated mathematical functions that go into calculating different values.
         
-        \gls{lstm}s also have a chain like structure, but the repeating module has a different structure. Instead of having a single neural network layer, there are four, interacting in a very special way. The key to \gls{lstm}s is the cell state which runs straight down the entire chain, with only some minor linear interactions. It is very easy for information to just flow along it unchanged.
+        \gls{lstm} is a unique neural network in a sense that it is specifically made to support learning long-term dependencies, originally created by \autocite{Hochreiter1997LongSM}. \gls{lstm} is composed of four main layers, called cell, input gate, forget gate and output gate. Each of those components are explained below.
         
-        The \gls{lstm} has the ability to remove or add information to the cell state, carefully regulated by structures called gates. Gates are a way to optionally let information through. They are composed out of a sigmoid neural net layer and a pointwise multiplication operation.
-        
-        The sigmoid layer outputs numbers between zero and one, describing how much of each component should be let through. A value of zero means \textit{let nothing through}, while a value of one means \textit{let everything through}. An LSTM has three of these gates, to protect and control the cell state.
-        
-        % First step
-        
-        The first step in \gls{lstm} is to decide what information is going to be thrown away from the cell state. This decision is made by a sigmoid layer called the \textit{forget gate layer}. It looks at $h_{t\!^{\_}1}$ and $x_t$, and outputs a number between 0 and 1 for each number in the cell state $C_{t\!^{\_}1}$. A 1 represents \textit{completely keep this} while a 0 represents the opposite.
-        
-        % Second step
-        
-        The next step is to decide what new information it is going to store in the cell state. This has two parts. First, a sigmoid layer called the \textit{input gate layer} decides which values will be updated. Next, a tanh layer creates a vector of new candidate values, $\zeta_t$, that could be added to the state.
-        
-        % Third step
-        
-        The old state, $C_{t\!^{\_}1}$, is updated into the new cell state $C_t$. The previous steps already decided what needs to be done - multiply the old state by $f_t$, forgetting the things that were decided to be forgotten earlier. Then it adds $i_{t}$ ∗ $\zeta_t$. These are the new candidate values, scaled by how much it decides to update each state value.
-        
-        % Fourth step
-        
-        Finally, \gls{lstm} needs to decide what it is going to output. This output will be based on the cell state, but will be a filtered version. First, it runs a sigmoid layer which decides what parts of the cell state are going to be output. Then, it puts the cell state through tanh (to push the values to be between −1 and 1) and multiplies it by the output of the sigmoid gate, so that it only outputs the parts it decided to.
+        \subsubsection{Cell State}
+            The cell state is the information that is currently held in memory by the \gls{lstm}. The way that \gls{lstm} works is very similar to what is known about how human brains process memories and remember things. So in this case, the cell state is the memory itself. Naturally, some memories last shorter than others and are forgotten, so the cell state is holding the information for an arbitrary amount of time that the neural network decides to be fit.
+            
+            The cell state is constantly being updated and filtered as it gets passed through gates and various functions and layers are applied to stored values.
+            
+        \subsubsection{Forget Gate}
+            The first step that happens during \gls{lstm} processing is data is put through a forget gate. Since the all of the information in the cell state is numbers and fractions, forget gate outputs values between zero to one, assigning preferences to one cell state values over others. The decision and calculation of values between zero and one is done by the sigmoid layer, where a zero indicates that something should be \textit{forgotten}, while one - \textit{remembered}.
+            
+            To continue the example of comparing similarities to how human brain works, when a person reads a piece of text, it does not remember everything letter to letter, word to word. Usually, what that person remembers is only the main key words that convey the message of the text, while the not important parts are forgotten. The forget gate is tasked with deciding which parts are not important enough for it to be sensible enough to forget them.
+            
+        \subsubsection{Input Gate}
+            The job of the input gate is to let new information through. This is the opposite effect of the forget gate. Existing values are updated based on new input if their importance increases (or decreases) and, subsequently, new candidate values are calculated, that would fill the empty spots left by the forget gate.
+            
+            What happens next is the processed values of input and forget gates are combined into the cell state. The current cell state is multiplied by the forget gate values that discard the information that is deemed to be unnecessary, while the input gate adds new values and scales them to be in line with previous calculations.
+            
+            Again, going back to previous example, the equivalent of an input gate is a person reading a second paragraph after having read the first one. The process of taking in new things and forgetting previous information is happening almost simultaneously, as new information comes in, current information is updated with new context, additional value is given to previous details while at the same time things that turn out to be not important are forgotten.
+            
+        \subsubsection{Output Gate}
+            The output gate is the last step in the process. What happens here is a decision is made on which values are actually going to be remembered. Note that previously mentioned gates are only tasked with forgetting and adding new information to the cell state.
+            
+            First of all, a sigmoid layer is run on the cell state which decides what values are going to be output. Secondly, the cell is put through a tanh function that pushes the values between -1 and 1. Thirdly, outputs of the sigmoid layer and tanh function are multiplied with each other, so that the overall output is only those parts that were decided.
+            
+            To finish off with an example, after a person reads two paragraphs, the memory of those two paragraphs (or what is left of it) is the result of the output gate in this case (being the finalised information inside the cell state).

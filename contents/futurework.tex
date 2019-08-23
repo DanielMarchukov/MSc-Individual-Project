@@ -1,0 +1,16 @@
+\section{Future Work} \label{futurework}
+    While the project is ambitious in its goal to combine argument mining, argument relation detection and argument framework analysis into a single coherent system, it is far from being complete in its current iteration. This chapter considers a multitude of possible improvements that could be implemented to further the quality of the project in future.
+    
+    First of all, technical bottlenecks should be eliminated. This means that due to the scale of the project, additional hardware resources are required which could potentially free up space for innovation and additional parameter tuning. Currently, the system hinges on a 78\% rate of predictions being accurate, which is great considering the circumstances, but there is a lot of room for improvement.
+    
+    Secondly, at the moment the user interface is very minimal and requires programming language knowledge from the user to operate it. Eliminating this factor would be ideal to bring the software closer to the user.
+    
+    The third possible improvement is to completely adopt the micro services architecture. This would mean that the project has to be broken up into distinct components and hosted on the cloud. What this does is allows for future collaboration, where each component acts as a plugin, that can be easily added or removed based on user's needs and goals. For example, a user might first want to train a model or use an existing one to simply perform argument framework analysis, or, alternatively, train the model and in the same cycle test it on live data for comparison. Additionally, it would be possible to develop and easily integrate a whole different model, that does not use \gls{lstm} at all, and is something completely new and innovative. On the other hand, other existing models that are developed by others should not be ignored and could be incorporated into the project alongside existing implementation. For example, back in \cref{deeplearning}, one similar approach was mentioned, that reached 89.53\% accuracy rate, improving which could be seen as the next milestone for the project.
+    
+    Next, the software is currently limited to Twitter. While Twitter is a popular social media platform, it is not the only one, and so it could be expanded to support other platforms, which would enable the system to perform analysis on a much more wider scale.
+    
+    Last but not least, the software can be rebuilt from the ground up using custom made solutions. While this is a time expensive option, there are some benefits to this. One is that the programming language can be chosen based on needs, not the availability of certain specific libraries. Secondly, most libraries are developed to be general purpose, available for use to most problems. In this domain, it might be preferable to build and tune the library functions specifically to argument mining, given that this is a pretty young research field.
+    
+    In conclusion, there are many pathways the project can be taken from this point onwards. While not all approaches are must-haves, the important fact is that there are limitless possibilities to how the project can be shaped to be in the future, and all of them are promising in their own way.
+    
+    

@@ -9,23 +9,23 @@
             First of all, in order to obtain tweets, a Twitter account needs to be created and applied for a developer status. For the purpose of this project, a personal account was used, which is why secret authentication keys are hidden and should be supplied by the user. At the moment, the secret key is hard coded, but creating an intuitive way for the user to input personal secret authentication keys/tokens should not be a problem in future iterations.
             
             \begin{lstlisting}[language=Python, caption=Connecting Twitter API, label=code:twitterapi]
-    class TwitterMining:
-        def __init__(self):
-            self.__auth = tweepy.OAuthHandler(key_secret.consumer_key, 
-                key_secret.consumer_secret)
-            self.__auth.set_access_token(key_secret.access_token, 
-                key_secret.access_token_secret)
-            self.__api = tweepy.API(self.__auth, wait_on_rate_limit=True)
+class TwitterMining:
+    def __init__(self):
+        self.__auth = tweepy.OAuthHandler(key_secret.consumer_key, 
+            key_secret.consumer_secret)
+        self.__auth.set_access_token(key_secret.access_token, 
+            key_secret.access_token_secret)
+        self.__api = tweepy.API(self.__auth, wait_on_rate_limit=True)
             \end{lstlisting}
             
             Once connected (see \cref{code:twitterapi}), the software is able to interact with Twitter \gls{api} and perform operations.
             
             \begin{lstlisting}[language=Python, caption=Starting Data Mining, label=code:twitterstream]
-    def mine_tweets(self, query="Brexit", since="2019-07-20", lang="en", 
-                    count=20):
-        for tweet in tweepy.Cursor(self.__api.search, q=query, lang=lang, 
-                                   since=since, tweet_mode='extended',
-                                   result_type='recent').items(count):
+def mine_tweets(self, query="Brexit", since="2019-07-20", lang="en", 
+                count=20):
+    for tweet in tweepy.Cursor(self.__api.search, q=query, lang=lang, 
+                              since=since, tweet_mode='extended',
+                              result_type='recent').items(count):
             \end{lstlisting}
             
             The main parameters that can be input are the query search term, a date range (the \textit{at most 7 day old tweet rule} applies here), the number of tweets to fetch (parameter \textit{count}), language (English by default) and result type specifies the ordering of tweets (most recent, in this case). Implementation of this is presented in \cref{code:twitterstream}. The next subsection talks about processing tweets and storing them in a \gls{csv} file.
@@ -34,60 +34,53 @@
             The fetched tweet is preprocessed, by removing stop words and performing lemmatization. Here is the code sample showing how it is implemented.
             
             \begin{lstlisting}[language=Python, caption=Cleaning of Data (Part 1), label=code:cleandata1]
-    if tweet.full_text.startswith("RT @"):
-        text = tweet.retweeted_status.full_text
-    else:
-        text = tweet.full_text
+if tweet.full_text.startswith("RT @"):
+    text = tweet.retweeted_status.full_text
+else:
+    text = tweet.full_text
 
-    if "http" in text:
-        index = text.index("http")
-        text = text[:0 - (len(text) - index)]
+if "http" in text:
+    index = text.index("http")
+    text = text[:0 - (len(text) - index)]
             \end{lstlisting}
-            \FloatBarrier
             
             If a tweet is a retweet, then what twitter does is inserts a "RT \@" string at the start, specifying that it is a retweet and the user name that retweeted it. This information is unnecessary and will only act to confuse the \gls{lstm} prediction model, thus is removed. Also, each tweet is truncated because Twitter adds a short \gls{url} to the end of tweet. To avoid the case where the tweet is cut off mid word, full text field needs to be accessed. This does not solve the problem of there still being a \gls{url} at the end of text, which has to be also removed manually from the string (see \cref{code:cleandata1}).
             
             Afterwards, the text is split into words, and each word is treated and assessed individually.
             
             \begin{lstlisting}[language=Python, caption=Cleaning of Data (Part 2), label=code:cleandata2]
-    words = text.split(' ')
-    for word in words:
-        if "@" in word:
-            continue
-        if "&" in word:
-            word = "and"
-        word = word.replace("'", "")
-        word = re.sub(r'[^\w]', '', word)
+words = text.split(' ')
+for word in words:
+    if "@" in word:
+        continue
+    if "&" in word:
+        word = "and"
+    word = word.replace("'", "")
+    word = re.sub(r'[^\w]', '', word)
             \end{lstlisting}
-            \FloatBarrier
             
-            The second step in data cleaning process involves skipping words that start with "\@" symbol, which indicates a twitter user name. User names tend to be unstructured, containing one or multiple words and possibly numbers, and they do not necessarily have to be in English. Again, to avoid confusion by the prediction model, they are removed from the tweet together with all non-alphanumerical symbols (see \cref{code:cleandata2}).
+            The second step in data cleaning process involves skipping words that start with "@" symbol, which indicates a twitter user name. User names tend to be unstructured, containing one or multiple words and possibly numbers, and they do not necessarily have to be in English. Again, to avoid confusion by the prediction model, they are removed from the tweet together with all non-alphanumerical symbols (see \cref{code:cleandata2}).
             
             Next, within the same for-loop, the process of removing stop words and performing lemmatization is done (see \cref{code:cleandata3}).
             
             \begin{lstlisting}[language=Python, caption=Cleaning of Data (Part 3), label=code:cleandata3]
-    if word not in self.__stop_words:
-        tag = pos_tag([word])
-        word = self.__lem.lemmatize(word, self.__tag_map[tag[0][1]])
-        filtered += word + " "
+if word not in self.__stop_words:
+    tag = pos_tag([word])
+    word = self.__lem.lemmatize(word, self.__tag_map[tag[0][1]])
+    filtered += word + " "
             \end{lstlisting}
-            \FloatBarrier
             
-            If the word does not belong to a library of Natural language Tool Kits' stop words, then the \textit{post\_tag} variable determines the type of word (noun, verb, adverb, etc.) and based on that, lemmatizes it. The fully processed word that passed all of the previously mentioned and current conditions is saved inside the \textit{filtered} variable, which at the end of processing each tweet represents the fully cleaned text of that tweet.
+            If the word does not belong to a library of Natural Language Tool Kit stop words, then the \textit{post\_tag} variable determines the type of word (noun, verb, adverb, etc.) and based on that, lemmatizes it. The fully processed word that passed all of the previously mentioned and current conditions is saved inside the \textit{filtered} variable, which at the end of processing each tweet represents the fully cleaned text of that tweet.
             
             Afterwards, the resulting text is saved into \gls{csv} file format, along with meta data about the tweet (timestamp, like count, etc.) for later use (see \cref{code:cleandata4}). The last criteria is that the resulting text has to contain at least 31 characters. The character count is artificially chosen, as it avoids short length tweets, also operating on the assumption that if the original text contained a lot of unnecessary information (\gls{url}s, hashtags (\#), etc.), then after removing all that data the tweet may lose its' original context. 
             
             \begin{lstlisting}[language=Python, caption=Cleaning of Data (Part 4), label=code:cleandata4]
-    if len(filtered) > 30:
-        filtered = " ".join(filtered.split())
-        file.writerow([tweet_count,
-                       tweet.created_at,
-                       tweet.retweet_count,
-                       tweet.favorite_count,
-                       filtered.lower()])
-    tweet_count = tweet_count + 1
+if len(filtered) > 30:
+    filtered = " ".join(filtered.split())
+    file.writerow([tweet_count, tweet.created_at, tweet.retweet_count,
+                  tweet.favorite_count, filtered.lower()])
+tweet_count = tweet_count + 1
             \end{lstlisting}
-            \FloatBarrier
             
             The importance to perform an intermediate saving of the data into \gls{csv} file is to alleviate the pressure on \gls{ram}, there is no need to hold all data in memory at this point.
             
@@ -100,346 +93,323 @@
             The \gls{lstm} was developed utilising the \gls{snli} corpus, which contains 570,152 sentence pairs labelled \textit{entailment}, \textit{neutral}, \textit{contradiction} or --- \autocite{Bowman2015ALA}. The --- pairs were removed from the data set as they indicate a lack of consensus from the annotators. Next, these pairs are split into three separate data sets. The training set consists of 549,367 sentence pairs, while validation and testing sets contain 9,842 and 9,824 respectively. The argument for using \gls{snli} data sets is that the sheer size of it make it feasible to train a neural network.
             
             \begin{lstlisting}[language=Python, caption=Setup of GloVe Data, label=code:glovemap]
-    def setup_word_map(self, file):
-        with open(file, "r", encoding="utf-8") as glove:
-            for line in glove:
-                name, vector = tuple(line.split(" ", 1))
-                self.__glove_word_map[name] = np.fromstring(vector, sep=" ")
+def setup_word_map(self, file):
+    with open(file, "r", encoding="utf-8") as glove:
+        for line in glove:
+            name, vector = tuple(line.split(" ", 1))
+            self.__glove_word_map[name] = np.fromstring(vector, sep=" ")
             \end{lstlisting}
-            \FloatBarrier
         
             Next, instead of word2vec, the word embeddings trained from \gls{glove} (see \cref{code:glovemap}) are used \autocite{Pennington2014GloveGV}. This is because \gls{glove} covers more words in the \gls{snli} data set than word2vec. More precisely, while \gls{snli} contains 37K unique tokens, around 4.1K of them cannot be found in \gls{glove}, while 12.1K in word2vec. Basically, what this does is maps each word to a series of numbers.
             
             \begin{lstlisting}[language=Python, caption=Processing SNLI Data Set, label=code:processsnli]
-    def update_data_scores(self, file):
-        for row in file:
-            hyp_sentences.append(np.vstack(
-                self.sentence2sequence(row["sentence1"].lower())[0]))
-            evi_sentences.append(np.vstack(
-                self.sentence2sequence(row["sentence2"].lower())[0]))
-            scores.append(self.score_setup(row))
-        hyp_sentences = np.stack([self.fit_to_size(x, 
-                            (self.__hypothesis_length, self.__vector_size))
-                             for x in hyp_sentences])
-        evi_sentences = np.stack([self.fit_to_size(x, 
-                            (self.__evidence_length, self.__vector_size))
-                             for x in evi_sentences])
-        return (hyp_sentences, evi_sentences), np.array(scores)
+for line in file:
+    hypotheses.append(np.vstack(self.sent_to_seq(
+                                row["sentence1"].lower())[0]))
+    evidences.append(np.vstack(self.sent_to_seq(
+                                row["sentence2"].lower())[0]))
+    scores.append(self.score_setup(row))
+hypotheses = np.stack([self.fit_to_size(x, 
+                     (self.__hypothesis_length, self.__vector_size))
+                      for x in hypotheses])
+evidences = np.stack([self.fit_to_size(x, 
+                     (self.__evidence_length, self.__vector_size))
+                      for x in evidences])
             \end{lstlisting}
-            \FloatBarrier
             
             In \cref{code:processsnli} code sample, the algorithm reads through the training set, and from each line extracts hypothesis and evidence sentences, along with its' classification scores. The sentences are transformed into sequences of numbers, by looking at \gls{glove} data for each word in a sentence. As for the scores, they are assigned a value based on annotator's verdict specified inside the \gls{snli} text file (see \cref{code:scoresetup}). At the end, the resulting matrices need to be resized so that they are of set equal length and can be evaluated and compared properly.
             
             \begin{lstlisting}[language=Python, caption=Classification Score Setup, label=code:scoresetup]
-    def score_setup(row):
-        convert_dict = {
-            'entailment': 0,
-            'neutral': 1,
-            'contradiction': 2
-        }
-        score = np.zeros((3,))
-        for x in range(1, 6):
-            tag = row["label" + str(x)]
-            if tag in convert_dict:
-                score[convert_dict[tag]] += 1
-        return score / (1.0 * np.sum(score))
+def setup_score(row):
+    map_relation_to_val = {
+        'entailment': 0,
+        'neutral': 1,
+        'contradiction': 2
+    }
+    values = np.zeros((3,))
+    for num in range(1, 6):
+        idx = row["label" + str(num)]
+        if idx in map_relation_to_val:
+            values[map_relation_to_val[idx]] += 1
+    return values / (1.0 * np.sum(values))
             \end{lstlisting}
-            \FloatBarrier
             
         \subsubsection{LSTM Initialisation and Setup}
-            
             The way that TensorFlow initialises its' models is via the use of placeholders. The placeholder acts as a variable that can be changed while the model is running and it can be given a default value. This is useful, because the model can update its' inner parameters midway through training process and tune them to better performance results.
             
             \begin{lstlisting}[language=Python, caption=Placeholders for Sentences and Results, label=code:placeholder1]
-    self.__hyp = tf.placeholder(tf.float32, 
-                [self.__batch_size, self.__max_hypothesis_length, 
-                self.__vector_size], 'hypothesis')
-    self.__evi = tf.placeholder(tf.float32, 
-                [self.__batch_size, self.__max_evidence_length, 
-                self.__vector_size], 'evidence')
-    self.__labels = tf.placeholder(tf.float32, 
-                [self.__batch_size, self.__n_classes], 'label')
+self.__hyp = tf.placeholder(tf.float32, 
+            [self.__batch_size, self.__max_hypothesis_length, 
+             self.__vector_size], 'hypothesis')
+self.__evi = tf.placeholder(tf.float32, 
+            [self.__batch_size, self.__max_evidence_length, 
+             self.__vector_size], 'evidence')
+self.__labels = tf.placeholder(tf.float32, 
+            [self.__batch_size, self.__n_classes], 'label')
             \end{lstlisting}
-            \FloatBarrier
             
             The hypothesis, evidence sentences and correct results (from \gls{snli} data) placeholders are created (see \cref{code:placeholder1}). Then, the actual forward and backward \gls{lstm} cells are initialised, as shown here:
             
             \begin{lstlisting}[language=Python, caption=Initialisation of LSTM, label=code:placeholder2]
-    self.__input_keep = tf.placeholder_with_default(1.0, shape=())
-    self.__output_keep = tf.placeholder_with_default(1.0, shape=())
-    self.__state_keep = tf.placeholder_with_default(1.0, shape=())
+self.__input_keep = tf.placeholder_with_default(1.0, shape=())
+self.__output_keep = tf.placeholder_with_default(1.0, shape=())
+self.__state_keep = tf.placeholder_with_default(1.0, shape=())
 
-    self.__lstm_back = tf.keras.layers.LSTMCell(self.__hidden_size)
-    self.__lstm_drop_back = tf.contrib.rnn.DropoutWrapper(
-                    self.__lstm_back,
-                    input_keep_prob=self.__input_keep,
-                    output_keep_prob=self.__output_keep,
-                    state_keep_prob=self.__state_keep)
-    self.__lstm = tf.keras.layers.LSTMCell(self.__hidden_size)
-    self._lstm_drop = tf.contrib.rnn.DropoutWrapper(
-                    self.__lstm,
-                    input_keep_prob=self.__input_keep,
-                    output_keep_prob=self.__output_keep,
-                    state_keep_prob=self.__state_keep)
+self.__lstm_back = tf.keras.layers.LSTMCell(self.__hidden_size)
+self.__lstm_drop_back = tf.contrib.rnn.DropoutWrapper(
+                self.__lstm_back,
+                input_keep_prob=self.__input_keep,
+                output_keep_prob=self.__output_keep,
+                state_keep_prob=self.__state_keep)
+self.__lstm = tf.keras.layers.LSTMCell(self.__hidden_size)
+self._lstm_drop = tf.contrib.rnn.DropoutWrapper(
+                self.__lstm,
+                input_keep_prob=self.__input_keep,
+                output_keep_prob=self.__output_keep,
+                state_keep_prob=self.__state_keep)
             \end{lstlisting}
-            \FloatBarrier
             
             The input, output and state keep represent percentages that show how many values are kept after processing. The default is that all values are kept, as in, all of the matrix values map to current state and to predicted output (result) of that input. Later, when the actual training is being done, the input keep probability value 0.1 is fed, mainly to combat scenarios where small difference between two similar yet different words decide the outcome of a textual entailment (e.g. words \textit{is} and \textit{are} could be seen as different, thus falsely label the result as \textit{contradiction}).
             
             Then, the actual \gls{lstm} cells are created, one for forward processing and one for backward. This combination makes the whole model bidirectional. Additionally, both cells get a dropout wrapper applied, with input, output and state variables applied as per their description in previous paragraph.
             
         \subsubsection{LSTM Training}
-            
             For training, Adam method is used with hyperparameters $\beta_1$ = 0.9 and $\beta_2$ = 0.999 for optimisation. Alternatively, Gradient Descent Optimiser is a popular alternative, but it has been shown that Adam is capable of outperforming it \autocite{Kingma2015AdamAM}. Initial learning rate is set to 0.001 and weight decay equals to 0.95 (see \cref{code:placeholder3}). A three-class classification is performed (entailment, neutral, contradiction) and L2 Regularization is used to minimize losses. Accuracy is used as an evaluation metric, and is discussed in detail in the next chapter.
             
             \begin{lstlisting}[language=Python, caption=LSTM Training Parameters, label=code:placeholder3]
-    self.__n_classes = 3
-    self.__weight_decay = 0.95
-    self.__learning_rate = 0.001
-    self.__fc_bias = tf.get_variable('bias', [self.__n_classes])
-    tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, 
-                         tf.nn.l2_loss(self.__fc_weight))
-    self.__rnn_outputs = tf.contrib.rnn.static_bidirectional_rnn(
-                         self.__lstm, self.__lstm_back,
-                         self.__input, dtype=tf.float32)
-    self.__classification_scores = tf.matmul(self.__rnn_outputs[-1], 
-                         self.__fc_weight) + self.__fc_bias
-    self.__optimizer = tf.train.AdamOptimizer(self.__learning_rate)
-                         .minimize(self.__total_loss)
+self.__n_classes = 3
+self.__weight_decay = 0.95
+self.__learning_rate = 0.001
+self.__fc_bias = tf.get_variable('bias', [self.__n_classes])
+tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, 
+                     tf.nn.l2_loss(self.__fc_weight))
+self.__rnn_outputs = tf.contrib.rnn.static_bidirectional_rnn(
+                     self.__lstm, self.__lstm_back,
+                     self.__input, dtype=tf.float32)
+self.__classification_scores = tf.matmul(self.__rnn_outputs[-1], 
+                     self.__fc_weight) + self.__fc_bias
+self.__optimizer = tf.train.AdamOptimizer(self.__learning_rate)
+                     .minimize(self.__total_loss)
             \end{lstlisting}
-            \FloatBarrier
         
             The \gls{lstm} itself is bidirectional. This means that the input is processed in two directions - words used at the beginning of the sentence are used to understand the following words after that, and words that come at the end of the sentence are used to predict what the beginning of the sentence should look like. The advantage of using bidirectional \gls{lstm}s is that they replicate the way humans process sentences and meanings. When reading a sentence, previously read words are required to understand what is being said next, and vice versa.
             
             \begin{lstlisting}[language=Python, caption=LSTM Training Algorithm, label=code:lstmtraining]
-    with tf.device("/device:GPU:0"):
-        for i in training_iterations:
-            batch = np.random.randint(df_list[0].shape[0], 
-                                    size=self.__batch_size)
-            hyps = df_list[0][batch, :]
-            evis = df_list[1][batch, :]
-            labels = c_scores[batch]
+with tf.device("/device:GPU:0"):
+    for i in training_iterations:
+        batch = np.random.randint(df_list[0].shape[0], 
+                                size=self.__batch_size)
+        hyps = df_list[0][batch, :]
+        evis = df_list[1][batch, :]
+        labels = c_scores[batch]
 
-            self.__sess.run([self.__optimizer], 
-                            feed_dict={self.__hyp: hyps,
-                                       self.__evi: evis,
-                                       self.__labels: labels,
-                                       self.__input_keep: 0.1})
+        self.__sess.run([self.__optimizer], 
+                        feed_dict={self.__hyp: hyps,
+                                  self.__evi: evis,
+                                  self.__labels: labels,
+                                  self.__input_keep: 0.1})
             \end{lstlisting}
-            \FloatBarrier
         
             The training is carried out by the \gls{gpu} component, due to its' superior multiprocessing capabilities that make the overall training process a lot faster and efficient. For a specified number of training iterations, the algorithm selects sentence pairs randomly from the data feature list, and their correct classification scores accordingly.
             
             Afterwards, the learning rate optimiser is fed to the model, along with selected hypothesis, evidence sentence pairs, their correct labelling, and input keep probability of 10\%.
             
         \subsubsection{Algorithm for Sentence Pair LSTM Prediction}
-            
             Once the \gls{lstm} model is trained, the previously data mined and cleaned Twitter tweets can be used for textual entailment prediction. But before they can be input into the model, same as the training data sets, they have to be transformed from character sequences into multidimensional arrays of numbers.
             
             \begin{lstlisting}[language=Python, caption=Transforming Sentences into Sequences, label=code:lstmrunning1]
-    def run_predict(self, s1, s2):
-        e_stack = np.vstack(self.__preproc.sentence2sequence(s1)[0])
-        e_tuple = (self.__preproc.get_evidence_length(),
-                   self.__preproc.get_vector_size())
-        evi_sentence = [self.__preproc.fit_to_size(e_stack, e_tuple)]
+def run_predict(self, s1, s2):
+    e_stack = np.vstack(self.__preproc.sentence2sequence(s1)[0])
+    e_tuple = (self.__preproc.get_evidence_length(),
+              self.__preproc.get_vector_size())
+    evi_sentence = [self.__preproc.fit_to_size(e_stack, e_tuple)]
 
-        h_stack = np.vstack(self.__preproc.sentence2sequence(s2)[0])
-        h_tuple = (self.__preproc.get_hypothesis_length(),
-                   self.__preproc.get_vector_size())
-        hyp_sentence = [self.__preproc.fit_to_size(h_stack, h_tuple)]
+    h_stack = np.vstack(self.__preproc.sentence2sequence(s2)[0])
+    h_tuple = (self.__preproc.get_hypothesis_length(),
+              self.__preproc.get_vector_size())
+    hyp_sentence = [self.__preproc.fit_to_size(h_stack, h_tuple)]
 
-        result = self.__lstm.run_prediction(evi_sentence, hyp_sentence)
-        return result
+    result = self.__lstm.run_prediction(evi_sentence, hyp_sentence)
+    return result
             \end{lstlisting}
-            \FloatBarrier
             
             Once that is done, the tweets can be passed into the function that does the actual prediction (see \cref{code:lstmrunning1}). The hyperparameters of the model remain the same that were used since the last time the model was trained. The code for this method is shown below:
             
             \begin{lstlisting}[language=Python, caption=Running LSTM Prediction, label=code:lstmrunning2]
-    def run_prediction(self, evi_sentence, hyp_sentence):
-        hyp = (hyp_sentence * self.__batch_size)
-        evi = (evi_sentence * self.__batch_size)
-        label = [[0, 0, 0]] * self.__batch_size
-        with tf.device("/device:GPU:0"):
-            prediction = self.__sess.run(self.__classification_scores,
-                                    feed_dict={self.__hyp: hyp,
-                                               self.__evi: evi,
-                                               self.__labels: label})
+def run_prediction(self, evi_sentence, hyp_sentence):
+    hyp = (hyp_sentence * self.__batch_size)
+    evi = (evi_sentence * self.__batch_size)
+    label = [[0, 0, 0]] * self.__batch_size
+    with tf.device("/device:GPU:0"):
+        prediction = self.__sess.run(self.__classification_scores,
+                                feed_dict={self.__hyp: hyp,
+                                          self.__evi: evi,
+                                          self.__labels: label})
 
-        return ["E", "N", "C"][np.argmax(prediction[0])]
+    return ["E", "N", "C"][np.argmax(prediction[0])]
             \end{lstlisting}
-            \FloatBarrier
             
             The result is a single character, \textit{E} meaning \textit{Entailment}, \textit{N} - \textit{Neutral} and \textit{C} - \textit{Contradiction}.
             
         \subsubsection{Saving and Loading of LSTM Model}
-            
             The saving and loading feature is very simple, because it is all handled by the TensorFlow library (see \cref{code:lstmsaveload} below).
             
             \begin{lstlisting}[language=Python, caption=Saving and Loading Functions, label=code:lstmsaveload]
-    def load_model(self, path):
-        tf.train.Saver().restore(self.__sess, path)
-        
-    def save_model(self, filename):
-        saver = tf.train.Saver()
-        saver.save(self.__sess, os.getcwd() + '\\models\\' + filename)
+def load_model(self, path):
+    tf.train.Saver().restore(self.__sess, path)
+    
+def save_model(self, filename):
+    saver = tf.train.Saver()
+    saver.save(self.__sess, os.getcwd() + '\\models\\' + filename)
             \end{lstlisting}
     
     \subsection{Graph Network Construction} \label{graphnetwork}
-    
-        The way that the argumentation framework is constructed is done at the same time as argument relation prediction results come in. \textit{Neutral} relationships are ignored as it simply indicates that there is no edge between nodes, so nothing needs to be done. On the other hand, if the relation is \textit{entailment} or \textit{contradiction}, then both arguments are added to the framework, and the edge between them is coloured appropriately. The time complexity of this algorithm is \textit{O(}$n^2$\textit{)}, because each tweet has to be checked against all tweets that came before it, at an earlier point in time.
+        The way that the \gls{af} is constructed is done at the same time as argument relation prediction results come in. \textit{Neutral} relationships are ignored as it simply indicates that there is no edge between nodes, so nothing needs to be done. On the other hand, if the relation is \textit{entailment} or \textit{contradiction}, then both arguments are added to the framework, and the edge between them is coloured appropriately. The time complexity of this algorithm is \textit{O(}$n^2$\textit{)}, because each tweet has to be checked against all tweets that came before it, at an earlier point in time.
         
         \begin{lstlisting}[language=Python, caption=Constructing Directed Graph from Results, label=code:lstmdigraph]
-    def run_model_on_twitter(self):
-        relation_count = 0
-        for i in range(len(self.__sentences) - 1, 0, -1):
-            for j in range(i - 1, 0, -1):
-                res = self.__rte.run_predict(self.__sentences[j], 
-                                             self.__sentences[i])
-                if res == "E" or res == "C":
-                    relation_count = relation_count + 1
-                    self.__af.add_argument(self.__sentences[j])
-                    self.__af.add_argument(self.__sentences[i])
-                    self.__af.add_relation(self.__sentences[j], 
-                                           self.__sentences[i],
-                                           'red' if res in ["C"] 
-                                                 else 'green')
-                    file.writerow([j, res, i, self.__sentences[j],
-                                   self.__sentences[i]])
-            \end{lstlisting}
+def run_model_on_twitter(self):
+    relation_count = 0
+    for i in range(len(self.__sentences) - 1, 0, -1):
+        for j in range(i - 1, 0, -1):
+            res = self.__rte.run_predict(self.__sentences[j], 
+                                         self.__sentences[i])
+            if res == "E" or res == "C":
+                relation_count = relation_count + 1
+                self.__af.add_argument(self.__sentences[j])
+                self.__af.add_argument(self.__sentences[i])
+                self.__af.add_relation(self.__sentences[j], 
+                                      self.__sentences[i],
+                                      'red' if res in ["C"] 
+                                             else 'green')
+                file.writerow([j, res, i, self.__sentences[j],
+                              self.__sentences[i]])
+        \end{lstlisting}
             
-            When adding arguments, it is important to keep track of the arguments (nodes) that were already added, as to avoid duplication. This is achieved by keeping a dictionary (also referred to as hash table, a key - value pair). The key in this case is the tweet itself, of data type string, and the value is the node number, which also corresponds to the size of the argument graph, node count (see \cref{code:addargrelation}).
-            
-            \begin{lstlisting}[language=Python, caption=Adding Arguments and Relations, label=code:addargrelation]
-    def add_argument(self, arg):
-        if arg not in self.__arguments:
-            self.__af.add_node(self.__size + 1, sentence=arg)
-            self.__size = self.__size + 1
-            self.__arguments[arg] = self.__size
-        return self.__size
+        When adding arguments, it is important to keep track of the arguments (nodes) that were already added, as to avoid duplication. This is achieved by keeping a dictionary (also referred to as hash table, a key - value pair). The key in this case is the tweet itself, of data type string, and the value is the node number, which also corresponds to the size of the argument graph, node count (see \cref{code:addargrelation}).
+        
+        \begin{lstlisting}[language=Python, caption=Adding Arguments and Relations, label=code:addargrelation]
+def add_argument(self, arg):
+    if arg not in self.__arguments:
+        self.__af.add_node(self.__size + 1, sentence=arg)
+        self.__size = self.__size + 1
+        self.__arguments[arg] = self.__size
+    return self.__size
 
-    def add_relation(self, u, v, relation):
-        self.__af.add_edge(self.__arguments[u], self.__arguments[v], 
-                           color=relation)
-            \end{lstlisting}
-            
-            The edge addition between nodes, is a much more simpler feat. By using the previously mentioned dictionary key - value mapping, the node numbers can be accessed easily and passed into the graph network library. Relation parameter corresponds to colour, \textit{contradiction} being red, and \textit{entailment} - green.
-            
-            \subsubsection{Saving and Loading of Graphs}
-            
-                To preserve the argumentation framework, all of its' data, nodes, edges, positioning has to be saved. The saving and loading features are handled by the graph library. While there are many methods to save and in different formats (e.g. matrix, adjacency list, etc.), the one that the software uses is called GEXF. The Graph Exchange XML Format is advantageous over others because it utilises all features of XML formatting and recording custom data and being a platform independent format as well.
-            
-                \begin{lstlisting}[language=Python, caption=Saving and Loading Argument Frameworks, label=code:afsaveload]
-    def save(self):
-        nx.write_gexf(self.__af, GRAPH_DATA_PATH)
+def add_relation(self, u, v, relation):
+    self.__af.add_edge(self.__arguments[u], self.__arguments[v], 
+                      color=relation)
+        \end{lstlisting}
+        
+        The edge addition between nodes, is a much more simpler feat. By using the previously mentioned dictionary key - value mapping, the node numbers can be accessed easily and passed into the graph network library. Relation parameter corresponds to colour, \textit{contradiction} being red, and \textit{entailment} - green.
+        
+        \subsubsection{Saving and Loading of Graphs}
+            To preserve the \gls{af}, all of its' data, nodes, edges, positioning has to be saved. The saving and loading features are handled by the graph library. While there are many methods to save and in different formats (e.g. matrix, adjacency list, etc.), the one that the software uses is called GEXF. The Graph Exchange XML Format is advantageous over others because it utilises all features of XML formatting and recording custom data and being a platform independent format as well.
+        
+            \begin{lstlisting}[language=Python, caption=Saving and Loading Argument Frameworks, label=code:afsaveload]
+def save(self):
+    nx.write_gexf(self.__af, GRAPH_DATA_PATH)
 
-    def load(self):
-        self.__af = nx.read_gexf(GRAPH_DATA_PATH)
-                \end{lstlisting}
+def load(self):
+    self.__af = nx.read_gexf(GRAPH_DATA_PATH)
+            \end{lstlisting}
     
     \subsection{Argumentation Framework Analysis} \label{bapanalysis}
-    
-        In order to analyse argumentation frameworks, certain steps need to be made. First of all, the \textit{conflict-free} sets have to be computed. Then the conflict-free list of sets has to be filtered out to only include those sets that \textit{defend} all of its' members. What remains after that is the \textit{d-admissible} set. Continuing on, to find the \textit{d-grounded extension}, the current d-admissible set needs to be filtered out to only include minimal subsets with respect to d-admissible set. Alternatively, to find the \textit{d-preferred extension}, the opposite needs to be computed, maximal subsets with respect to d-admissible set.
+        In order to analyse \gls{af}s, certain steps need to be made. First of all, the \textit{conflict-free} sets have to be computed. Then the conflict-free list of sets has to be filtered out to only include those sets that \textit{defend} all of its' members. What remains after that is the \textit{d-admissible} set. Continuing on, to find the \textit{d-grounded extension}, the current d-admissible set needs to be filtered out to only include minimal subsets with respect to d-admissible set. Alternatively, to find the \textit{d-preferred extension}, the opposite needs to be computed, maximal subsets with respect to d-admissible set.
         
         \subsubsection{Computing Conflict Free Sets}
-        
             \begin{lstlisting}[language=Python, caption=Conflict Free Arguments, label=code:conflictfree]
-    def conflict_free_arguments(self):
-        arguments = []
-        for node in self.__af.nodes():
-            arguments.append(node)
+def conflict_free_arguments(self):
+    arguments = []
+    for node in self.__af.nodes():
+        arguments.append(node)
 
-        for L in range(1, len(arguments) + 1):
-            for subset in itertools.combinations(arguments, L):
-                has_conflict = False
-                for u, v in self.__af.edges():
-                    if set([u, v]).issubset(subset):
-                        if (self.__af.has_edge(u, v)
-                                and self.__af[u][v]['color'] == ATTACK)
-                                or (self.__af.has_edge(v, u)
-                                and self.__af[v][u]['color'] == ATTACK):
-                            has_conflict = True
-                            break
-                if not has_conflict:
-                    self.__conflict_free.append(subset)
+    for L in range(1, len(arguments) + 1):
+        for subset in itertools.combinations(arguments, L):
+            has_conflict = False
+            for u, v in self.__af.edges():
+                if set([u, v]).issubset(subset):
+                    if (self.__af.has_edge(u, v)
+                            and self.__af[u][v]['color'] == ATTACK)
+                            or (self.__af.has_edge(v, u)
+                            and self.__af[v][u]['color'] == ATTACK):
+                        has_conflict = True
+                        break
+            if not has_conflict:
+                self.__conflict_free.append(subset)
             \end{lstlisting}
             
             The way that the conflict free sets are computed is by finding all combinations of existing nodes, and then removing those subsets that contain attack relation between the nodes in the subset. Once that is done, the list of sets only contains sets that do not have a red edge connecting them. Note that \textit{entailment} relation is permitted to exist between nodes in the same subset.
             
         \subsubsection{Computing of Admissible Sets}
-        
             For the set to qualify as admissible, another restriction is added alongside it being conflict free. Admissible sets are also defending each argument in the set, while still conflict free. The code below (see \cref{code:admissible}) illustrates the algorithm that achieves this.
             
             \begin{lstlisting}[language=Python, caption=Admissible Arguments, label=code:admissible]
-    def admissible_arguments(self):
-        for subset in self.__conflict_free:
-            attackers = dict()
-            for n in subset:
-                for u, v in self.__af.in_edges(n):
-                    if self.__af[u][v]['color'] == ATTACK:
-                        attackers[u] = attackers.get(u, 0) + 1
-
-            for att in attackers.keys():
-                for deff in subset:
-                    if self.__af.has_edge(deff, att):
-                        if self.__af[deff][att]['color'] == ATTACK:
-                            attackers[att] = attackers[att] - 1
-                    else:
-                        for supp in self.__supporters[att]:
-                            if self.__af.has_edge(deff, supp) and
-                                    self.__af[deff][supp]['color'] == ATTACK:
-                                attackers[att] = attackers[att] - 1
-            is_admissible = True
-            for att in attackers.keys():
-                if attackers[att] > 0:
-                    is_admissible = False
-                    break
-
-            if is_admissible:
-                self.__admissible.append(subset)
+attackers = dict()
+for n in subset:
+    for u, v in self.__af.in_edges(n):
+        if self.__af[u][v]['color'] == ATTACK:
+            attackers[u] = attackers.get(u, 0) + 1
+for att in attackers.keys():
+    for deff in subset:
+        if self.__af.has_edge(deff, att):
+            if self.__af[deff][att]['color'] == ATTACK:
+                attackers[att] = attackers[att] - 1
+        else:
+            for supp in self.__supporters[att]:
+                if self.__af.has_edge(deff, supp) and
+                        self.__af[deff][supp]['color'] == ATTACK:
+                    attackers[att] = attackers[att] - 1
             \end{lstlisting}
             
             The algorithm takes note of all attacks incoming to the set, and then subsequently checks if each of those attacks have a response (a defence) from either of the nodes in the set to the attacker node. This function also takes into account indirect attacks, as for the argument to be considered defended against attack, it does not have to directly target the attacking argument, as it is sufficient to attack different argument that is supporting the attacker.
             
         \subsubsection{Computing of Complete Extension}
-            
             Complete extension is just a filter on top of admissible set, that eliminates sets that do not include all arguments that the set can defend (see \cref{code:completeext}).
         
             \begin{lstlisting}[language=Python, caption=Complete Extension, label=code:completeext]
-    def complete_extension(self):
-        added = dict()
-        non_complete = []
-        for i in range(len(self.__admissible) - 1, 0, -1):
-            for j in range(i - 1, -1, -1):
-                if j not in added.keys() and 
-                        set(self.__admissible[j])
-                            .issubset(set(self.__admissible[i])):
-                    non_complete.append(set(self.__admissible[j]))
-                    added[j] = self.__admissible[j]
+def complete_extension(self):
+    added = dict()
+    non_complete = []
+    for i in range(len(self.__admissible) - 1, 0, -1):
+        for j in range(i - 1, -1, -1):
+            if j not in added.keys() and 
+                    set(self.__admissible[j])
+                        .issubset(set(self.__admissible[i])):
+                non_complete.append(set(self.__admissible[j]))
+                added[j] = self.__admissible[j]
 
-        for subset in self.__admissible:
-            if set(subset) not in non_complete:
-                self.__complete.append(subset)
+    for subset in self.__admissible:
+        if set(subset) not in non_complete:
+            self.__complete.append(subset)
             \end{lstlisting}
             
         \subsubsection{Computing of Grounded Extension}
-        
             Lastly, the grounded extension is computed, which constitutes the \textit{winning} arguments. These arguments are minimal with regards to the previously computed complete extension set. In a more natural language way, what this means is that only safe and not controversial arguments are accepted. The algorithm (see \cref{code:groundedext}) also takes into account an edge case such as there being an argument that is not attacked by any other argument, as this automatically qualifies that argument to be in the grounded extension (in fact, a grounded extension \textit{must} include such argument, otherwise it is not a grounded extension).
         
             \begin{lstlisting}[language=Python, caption=Grounded Extension, label=code:groundedext]
-    def grounded_extension(self):
-        intersect = [self.__complete[-1]]
-        for i in range(len(self.__complete) - 2, -1, -1):
-            intersect.append(set(intersect[-1])
-                                .intersection(self.__complete[i]))
-            if len(intersect[-1]) == 0:
-                self.__grounded = set(intersect[-2])
-                                    .union(self.__grounded_must_haves)
-                return self.__grounded
-        self.__grounded = set(intersect[-1])
-                            .union(self.__grounded_must_haves)
-        return self.__grounded
+def grounded_extension(self):
+    intersect = [self.__complete[-1]]
+    for i in range(len(self.__complete) - 2, -1, -1):
+        intersect.append(set(intersect[-1])
+                            .intersection(self.__complete[i]))
+        if len(intersect[-1]) == 0:
+            self.__grounded = set(intersect[-2])
+                                .union(self.__grounded_must_haves)
+            return self.__grounded
+    self.__grounded = set(intersect[-1])
+                        .union(self.__grounded_must_haves)
+    return self.__grounded
             \end{lstlisting}
             
     \subsection{Possible Alternatives to Current Implementation}
+        Lastly, the options in implementation that were not chosen are described here. It is important to showcase the reasoning behind possible alternatives as some of these might become a feasible addition in future alongside existing code.
         
+        First of all with regards to Twitter API, it has been already discussed that Tweepy is as of this moment the most established, documented and frequently updated library. With that said, if a new alternative comes up, or there are major changes in Twitter API itself, there is a world where a different approach is required and welcomed, though that is not the case at this moment.
+        
+        When cleaning data obtained from twitter, there is a lot of flexibility in how this can be implemented. For example, at the moment, the standard, default Natural Language Tool Kit's built in dictionary is used when determining stop words, lemmatization and so on. In contrast, a custom dictionary could be built, so that it suits specifically the Twitter corpus. Popular abbreviations could be expanded into full text, providing additional structure. Words that contain a hashtag at the start (\# symbol) could also be preprocessed differently, giving a pathway to evaluate them more accurately by the \gls{lstm} classifier. Unfortunately due to the fact that this requires a lot of development and manual work (producing custom dictionaries, specifically), this option is not feasible given the time constraints of the project.
+        
+        Developing a neural network and maximising its' learning potential is always a difficult task, due to a lot of variables involved. First of all, the two most known learning rate optimisation algorithms are the Gradient Descent Optimization and Adam Optimization. The choice for this project was Adam Optimization algorithm, because it is a more recently developed algorithm and has shown a slight increase in accuracy over Gradient Descent. Secondly, the sizes of different \gls{lstm} states, input arrays and output dimensions were heavily influenced by limitations of hardware. There is an argument to be made that using different variable values and settings, when the program is put on a supercomputer with (seemingly) infinite resources, new heights could be reached and performance greatly improved.
+        
+        Admittedly, there is an alternative to current implementation library TensorFlow. PyTorch is a new library that has the usual qualities - offering new possibilities, additional customisation parameters, all at the cost of it being new, less documented and less tested. In design chapter, the choice of TensorFlow versus PyTorch was already discussed, but a passing mention has to be made that although they are different in nature, both libraries do share a small amount of sub-libraries and sub-dependencies, so migrating from one to another would not be as big of an overhaul or require less work than expected. This means that a close eye should be kept and future changes made accordingly.
+        
+        While there does not seem to be a close alternative in terms of libraries when looking at NetworkX, the graph network construction library, there is a different approach to be considered when performing \gls{af} analysis. Currently, the way that the algorithm arrives to the grounded extension could be considered a na\"ive implementation, calculating conflict free sets, then eliminating them one by one to have only admissible sets left, then complete sets and finally grounded extension. Alternative approach would be to develop a labeling algorithm, which would essentially guess whether the argument is grounded or not based on traversal of the graph and the neighbouring arguments (incoming attacks/supports and outgoing attacks/supports). In other terms, the graph would have to be traversed from each node using depth first search, keeping track of previous traversal's computed labels, the label it assigned (or was not possible to assign) and the labels of neighbour nodes of current node. As this is an unconventional algorithm, deciding whether it is better or not than current approach is hard to say. Which is why due to simplicity and implementation speed, the iterative approach of computing all possibilities and filtering the wrong ones out was chosen.

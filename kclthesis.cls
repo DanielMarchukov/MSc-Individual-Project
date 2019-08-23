@@ -150,26 +150,6 @@
 \lstset{style=pythonstyle}
 \crefname{lstlisting}{Listing}{Listings}
 
-% Python style for highlighting
-% \newcommand\pythonstyle{\lstset{
-% language=Python,
-% basicstyle=\ttm,
-% otherkeywords={self,if,is},             % Add keywords here
-% keywordstyle=\ttb\color{deepblue},
-% emph={__init__,True,False},          % Custom highlighting
-% emphstyle=\ttb\color{deepred},    % Custom highlighting style
-% stringstyle=\color{deepgreen},
-% frame=tb,                         % Any extra options here
-% showstringspaces=false            % 
-% }}
-% Python environment
-% \lstnewenvironment{python}[1][]{\pythonstyle\lstset{#1}}{}
-% Python for external files
-% \newcommand\pythonexternal[2][]{{\pythonstyle\lstinputlisting[#1]{#2}}}
-% % Python for inline
-% \newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
-
-% New Comment for todo notes
 \newcommand{\insertref}[1]{\todo[color=green!40]{RefMissing: #1}}
 \newcommand{\explainindetail}[1]{\todo[color=red!40]{Explain: #1}}
 \newcommand{\askfeedback}[1]{\todo[color=blue!40]{Feedback Required: #1}}
@@ -199,7 +179,7 @@
 	\begin{center}
 		\textbf{\@modulecode \\ \@submissiontitle}
 	\end{center}
-\end{minipage}%
+\end{minipage}
 
 
 \vspace{1cm}
@@ -208,7 +188,7 @@
 	\begin{flushleft}
 	\textbf{Name:\\Student Number:\\Email Address:\\Degree Programme:\\Project Title:\\ Supervisor:\\ Word Count:\\}
 	\end{flushleft}
-\end{minipage}%
+\end{minipage}
 \begin{minipage}{0.7\textwidth}
 	\begin{flushleft}
 	\@author \\ \@studentnumber \\ \@emailaddress \\ \@programme \\ \@title \\ \@supervisor \\ \@wordcount

@@ -398,20 +398,20 @@ FUNCTION {format.availablefrom}
   if$
 }
 FUNCTION {format.lastvisited}
-{ lastvisited duplicate$ empty$
+{ lastvisited empty$
     { pop$ "" }
     { "~Retrieved~\cleanlookdateon\printdate{" swap$ * "}~from" * }
   if$
 }
 FUNCTION {format.accessed}
-{ lastvisited duplicate$ empty$
+{ lastvisited empty$
     { pop$ "" }
     { "(Accessed:~\cleanlookdateon\printdate{" swap$ * "})" * }
   if$
 }
 FUNCTION {format.accessedbrackets}
-{ lastvisited duplicate$ empty$
-    { pop$ "" }
+{ lastvisited empty$
+    { "[Accessed:~\printdate{" swap$ * "}]" * }
     { "[Accessed:~\printdate{" swap$ * "}]" * }
   if$
 }
@@ -1141,13 +1141,14 @@ FUNCTION {misc}
   date.block
   format.title output
   new.block
-  howpublished "howpublished" bibinfo.check output
+  howpublished output
   new.block
-  format.note output
   format.eprint output
   format.lastvisited output
   add.blank
   format.url output
+  add.blank
+  format.accessedbrackets output
   fin.entry
 }
 FUNCTION {website}
@@ -1158,13 +1159,13 @@ FUNCTION {website}
   date.block
   format.title output
   new.block
-  howpublished "howpublished" bibinfo.check output
+  format.organization "organization" bibinfo.check output
   new.block
-  format.note output
-  format.eprint output
-  format.lastvisited output
+  bbl.available output
   add.blank
   format.url output
+  add.blank
+  format.accessedbrackets output
   fin.entry
 }
 FUNCTION {phdthesis}
